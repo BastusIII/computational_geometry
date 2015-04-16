@@ -46,4 +46,9 @@ public class SimpleLineSegment implements LineSegment {
         boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) >= 0;
         return checkSideSelf && checkSideGiven;
     }
+
+    @Override
+    public String toString() {
+        return point1.toString() + ":" + point2.toString();
+    }
 }
