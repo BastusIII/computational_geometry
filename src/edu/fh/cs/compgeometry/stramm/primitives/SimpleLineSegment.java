@@ -37,7 +37,7 @@ public class SimpleLineSegment implements LineSegment {
         this.point1.x * point.y -
         this.point1.y * point2.x +
         this.point1.x * point2.y;
-        return Math.abs(ccw) <= THRESHOLD ? ccw : 0;
+        return Math.abs(ccw) >= THRESHOLD ? ccw : 0;
     }
 
     @Override
