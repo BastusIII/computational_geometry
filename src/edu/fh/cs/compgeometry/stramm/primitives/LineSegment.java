@@ -11,7 +11,7 @@ public interface LineSegment {
 
     Vec2d getPoint2();
 
-    boolean isCCW(Vec2d point);
+    double ccw(Vec2d point);
 
     boolean isCrossing(LineSegment lineSegment);
 
