@@ -44,7 +44,7 @@ public class SimpleLineSegment implements LineSegment {
     public boolean isCrossing(LineSegment lineSegment) {
         boolean checkSideSelf = this.ccw(lineSegment.getPoint1()) * this.ccw(lineSegment.getPoint2()) >= 0;
         boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) >= 0;
-        return checkSideSelf && checkSideGiven;
+        return !(checkSideSelf && checkSideGiven);
     }
 
     @Override

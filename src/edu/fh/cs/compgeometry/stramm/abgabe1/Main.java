@@ -1,6 +1,8 @@
 package edu.fh.cs.compgeometry.stramm.abgabe1;
 
+import com.sun.javafx.geom.Vec2d;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
+import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 import edu.fh.cs.compgeometry.stramm.util.LineSegmentParser;
 
 import java.io.File;
@@ -37,5 +39,11 @@ public class Main {
         }
         System.out.println(lineSegments);
         System.out.println("hoi: " + count + " lel " + lineList.get(1));
+
+        LineSegment line1 = new SimpleLineSegment(new Vec2d(0.0, -1.0), new Vec2d(0.0, 2.0));
+        LineSegment line2 = new SimpleLineSegment(new Vec2d(-1.0, 0.0), new Vec2d(2.0, 0.0));
+
+        System.out.println("Lines crossing: " + line1.isCrossing(line2) + " " + line2.isCrossing(line1));
+
     }
 }
