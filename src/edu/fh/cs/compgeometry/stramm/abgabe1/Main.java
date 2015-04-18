@@ -1,6 +1,5 @@
 package edu.fh.cs.compgeometry.stramm.abgabe1;
 
-import com.sun.javafx.geom.Vec2d;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 import edu.fh.cs.compgeometry.stramm.util.LineSegmentParser;
@@ -21,29 +20,57 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+
+        final String pathToData = "." + File.separator + "data" + File.separator;
+        final List<String> fileNames = new ArrayList<>();
+        fileNames.add("s_1000_1.dat");
+        fileNames.add("s_10000_1.dat");
+        fileNames.add("s_100000_1.dat");
+
+        System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
+        for (String fileName: fileNames) {
+            crossLinesFromFile(new File(pathToData + fileName));
+        }
+
+    }
+
+    private static void crossLinesFromFile(final File file) {
         LineSegmentParser parser = new LineSegmentParser();
         Collection<LineSegment> lineSegments = null;
         try {
-            lineSegments = parser.readLineSegments(new File("." + File.separator + "data" + File.separator + "s_1000_1.dat"));
+            lineSegments = parser.readLineSegments(file);
         } catch (FileNotFoundException e) {
             System.out.println(e.getLocalizedMessage());
+            return;
         }
 
         List<LineSegment> lineList = new ArrayList<>(lineSegments);
+
+        long millis = System.currentTimeMillis();
         int count = 0;
 
-        for(int i = 0; i<lineList.size();  i++) {
-            for (int j=i+1; j<lineList.size(); j++) {
-                count = lineList.get(i).isCrossing(lineList.get(j))?count+1:count;
+        for (int i = 0; i < lineList.size(); i++) {
+            for (int j = i + 1; j < lineList.size(); j++) {
+                if(lineList.get(i).isCrossing(lineList.get(j))) {
+                    count++;
+                }
             }
         }
-        System.out.println(lineSegments);
-        System.out.println("hoi: " + count + " lel " + lineList.get(1));
 
-        LineSegment line1 = new SimpleLineSegment(new Vec2d(0.0, -1.0), new Vec2d(0.0, 2.0));
-        LineSegment line2 = new SimpleLineSegment(new Vec2d(-1.0, 0.0), new Vec2d(2.0, 0.0));
+        double timeTaken = (double)(System.currentTimeMillis() - millis) / 1000;
 
-        System.out.println("Lines crossing: " + line1.isCrossing(line2) + " " + line2.isCrossing(line1));
-
+        System.out.println("Lines crossing in " + file.toString() + ": " + count);
+        System.out.println("Time taken: " + timeTaken);
     }
+
+    /*
+    Output:
+Threshold: 1.0E-6
+Lines crossing in ./data/s_1000_1.dat: 13
+Time taken: 0.094
+Lines crossing in ./data/s_10000_1.dat: 734
+Time taken: 3.701
+Lines crossing in ./data/s_100000_1.dat: 77129
+Time taken: 384.663
+     */
 }

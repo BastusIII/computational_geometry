@@ -7,7 +7,7 @@ import com.sun.javafx.geom.Vec2d;
  */
 public class SimpleLineSegment implements LineSegment {
 
-    public static final double THRESHOLD = 1e-12;
+    public static final double THRESHOLD = 1e-6; //Math.pow(10.0, -12.0);
 
     private final Vec2d point1;
 
@@ -42,9 +42,9 @@ public class SimpleLineSegment implements LineSegment {
 
     @Override
     public boolean isCrossing(LineSegment lineSegment) {
-        boolean checkSideSelf = this.ccw(lineSegment.getPoint1()) * this.ccw(lineSegment.getPoint2()) >= 0;
-        boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) >= 0;
-        return !(checkSideSelf && checkSideGiven);
+        boolean checkSideSelf = this.ccw(lineSegment.getPoint1()) * this.ccw(lineSegment.getPoint2()) <= 0.0;
+        boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) <= 0.0;
+        return checkSideSelf && checkSideGiven;
     }
 
     @Override
