@@ -68,7 +68,18 @@ public class SimpleLineSegmentTest extends TestCase {
         LineSegment lineSegment14 = new SimpleLineSegment(new Vec2d(2.0, 1.0), new Vec2d(4.0, 2.0));
         Vec2d point4 = new Vec2d(5.0, 2.5);
         assertCCW(lineSegment14, point4, 0.0);
+
+        // eigener test
+//        puts "expect: false"
+//        puts checkLines([-2.0, -2.0, -1.0, -1.0], [1.0, 1.0, 2.0, 2.0])
+
+        LineSegment lineSegment15 = new SimpleLineSegment(new Vec2d(-2.0, -2.0), new Vec2d(-1.0, -1.0));
+        LineSegment lineSegment16 = new SimpleLineSegment(new Vec2d(1.0, 1.0), new Vec2d(2.0, 2.0));
+        assertEquals("Lines should not cross.", false, lineSegment15.isCrossing(lineSegment16));
+
+
     }
+
 
     private void assertCCW(LineSegment lineSegment, Vec2d point, double ccw) {
         assertEquals(lineSegment.toString() + " ccw with " + point.toString() + "should be " +ccw +"."

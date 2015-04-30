@@ -42,13 +42,33 @@ public class SimpleLineSegment implements LineSegment {
 
     @Override
     public boolean isCrossing(LineSegment lineSegment) {
-        boolean checkSideSelf = this.ccw(lineSegment.getPoint1()) * this.ccw(lineSegment.getPoint2()) <= 0.0;
+        double ccwOtherOne = this.ccw(lineSegment.getPoint1());
+        double ccwOtherTwo = this.ccw(lineSegment.getPoint2());
+        if (ccwOtherOne == 0 && ccwOtherTwo == 0) {
+            return isColinearOverlapping(lineSegment);
+        }
+        boolean checkSideSelf = ccwOtherOne * ccwOtherTwo <= 0.0;
         boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) <= 0.0;
+
         return checkSideSelf && checkSideGiven;
+    }
+
+    private boolean isColinearOverlapping(LineSegment lineSegment) {
+        return isOnLine(lineSegment.getPoint1()) || isOnLine(lineSegment.getPoint2());
+    }
+
+    private boolean isOnLine(Vec2d point) {
+        if (this.ccw(point) != 0) {
+            return false;
+        }
+        double lengthSelf = this.getPoint1().distance(this.getPoint2());
+        double lengthToPoint = this.getPoint1().distance(point);
+
+        return lengthSelf * lengthToPoint >= 0 && Math.abs(lengthToPoint) <= Math.abs(lengthSelf);
     }
 
     @Override
     public String toString() {
-        return point1.toString() + ":" + point2.toString();
+        return point1.x + ":" + point1.y + "->" + point2.x + ":" + point2.y;
     }
 }
