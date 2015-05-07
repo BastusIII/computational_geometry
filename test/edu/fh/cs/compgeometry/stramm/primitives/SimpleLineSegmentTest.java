@@ -77,6 +77,19 @@ public class SimpleLineSegmentTest extends TestCase {
         LineSegment lineSegment16 = new SimpleLineSegment(new Vec2d(1.0, 1.0), new Vec2d(2.0, 2.0));
         assertEquals("Lines should not cross.", false, lineSegment15.isCrossing(lineSegment16));
 
+        // Testing Threshold for bimmel
+        lineSegment1 = new SimpleLineSegment(new Vec2d(0.0, 0.0), new Vec2d(1.0, 0.0));
+        lineSegment2 = new SimpleLineSegment(new Vec2d(0.5, SimpleLineSegment.THRESHOLD), new Vec2d(0.5, 1.0));
+        assertEquals("Should cross by threshold: ", true, lineSegment1.isCrossing(lineSegment2));
+
+        // Testing two point lines on each other.
+        lineSegment1 = new SimpleLineSegment(new Vec2d(1.0, 1.0), new Vec2d(1.0, 1.0));
+        assertEquals("Points on each other should cross: ", true, lineSegment1.isCrossing(lineSegment1));
+
+        // Testing squared threshold stuff.
+        lineSegment1 = new SimpleLineSegment(new Vec2d(0.0, SimpleLineSegment.THRESHOLD), new Vec2d(0.0, 1.0));
+        lineSegment2 = new SimpleLineSegment(new Vec2d(SimpleLineSegment.THRESHOLD, 0.0), new Vec2d(1.0, 0.0));
+        assertEquals("Lines should not cross, distance is longer than threshold: ", false, lineSegment1.isCrossing(lineSegment2));
 
     }
 

@@ -37,11 +37,15 @@ public class SimpleLineSegment implements LineSegment {
         this.point1.x * point.y -
         this.point1.y * point2.x +
         this.point1.x * point2.y;
-        return Math.abs(ccw) >= THRESHOLD ? ccw : 0;
+        return Math.abs(ccw) > THRESHOLD ? ccw : 0;
     }
 
     @Override
     public boolean isCrossing(LineSegment lineSegment) {
+        // No threshold test, data is even more fuzzy!!!
+        if(this.point1.equals(this.point2)) {
+            return lineSegment.isOnLine(this.point1);
+        }
         double ccwOtherOne = this.ccw(lineSegment.getPoint1());
         double ccwOtherTwo = this.ccw(lineSegment.getPoint2());
         if (ccwOtherOne == 0 && ccwOtherTwo == 0) {
@@ -57,14 +61,18 @@ public class SimpleLineSegment implements LineSegment {
         return isOnLine(lineSegment.getPoint1()) || isOnLine(lineSegment.getPoint2());
     }
 
-    private boolean isOnLine(Vec2d point) {
+    @Override
+    public boolean isOnLine(Vec2d point) {
         if (this.ccw(point) != 0) {
             return false;
         }
-        double lengthSelf = this.getPoint1().distance(this.getPoint2());
-        double lengthToPoint = this.getPoint1().distance(point);
 
-        return lengthSelf * lengthToPoint >= 0 && Math.abs(lengthToPoint) <= Math.abs(lengthSelf);
+        double lineLength = this.getPoint1().distance(this.getPoint2());
+        double point1ToPoint = this.getPoint1().distance(point);
+        double point2ToPoint = this.getPoint2().distance(point);
+
+        return point1ToPoint <= THRESHOLD || point2ToPoint <= THRESHOLD
+                || (point1ToPoint < lineLength && point2ToPoint < lineLength);
     }
 
     @Override

@@ -15,4 +15,5 @@ public interface LineSegment {
 
     boolean isCrossing(LineSegment lineSegment);
 
+    boolean isOnLine(Vec2d point);
 }

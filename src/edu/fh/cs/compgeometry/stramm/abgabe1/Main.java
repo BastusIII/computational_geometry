@@ -24,8 +24,8 @@ public class Main {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
         fileNames.add("s_1000_1.dat");
-        //fileNames.add("s_10000_1.dat");
-        //fileNames.add("s_100000_1.dat");
+        fileNames.add("s_10000_1.dat");
+        fileNames.add("s_100000_1.dat");
 
         System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
         for (String fileName: fileNames) {
@@ -53,7 +53,7 @@ public class Main {
             for (int j = i + 1; j < lineList.size(); j++) {
                 if(lineList.get(i).isCrossing(lineList.get(j))) {
                     count++;
-                    System.out.println(lineList.get(i)+" X "+lineList.get(j));
+                    //System.out.println(lineList.get(i)+" X "+lineList.get(j));
                 }
             }
         }
@@ -67,12 +67,12 @@ public class Main {
     /*
     Output:
 Threshold: 1.0E-6
-Lines crossing in ./data/s_1000_1.dat: 13
-Time taken: 0.094
-Lines crossing in ./data/s_10000_1.dat: 734
-Time taken: 3.701
-Lines crossing in ./data/s_100000_1.dat: 77129
-Time taken: 384.663
+Lines crossing in ./data/s_1000_1.dat: 11
+Time taken: 0.085
+Lines crossing in ./data/s_10000_1.dat: 732
+Time taken: 3.888
+Lines crossing in ./data/s_100000_1.dat: 77127
+Time taken: 359.346
      */
 
 /*    Threshold: 1.0E-6
