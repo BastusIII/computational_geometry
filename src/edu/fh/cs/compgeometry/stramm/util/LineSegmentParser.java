@@ -30,7 +30,7 @@ public class LineSegmentParser {
         return lineSegments;
     }
 
-    private LineSegment readLine(final String line) {
+    public LineSegment readLine(final String line) {
         final StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
         final Vec2d point1 = new Vec2d(Double.parseDouble(tokenizer.nextToken())
                 , Double.parseDouble(tokenizer.nextToken()));
