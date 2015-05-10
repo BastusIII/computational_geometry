@@ -36,7 +36,12 @@ public class SimpleNamedPolygon implements NamedPolygon{
     }
 
     @Override
+    public double getArea() {
+        return polygon.getArea();
+    }
+
+    @Override
     public String toString() {
-        return name + " with " + getLines().size() + " lines.";
+        return name + " with " + getLines().size() + " lines an area of " + getArea() + ".";
     }
 }

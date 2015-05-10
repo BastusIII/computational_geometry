@@ -19,4 +19,13 @@ public class SimplePolygon implements Polygon {
         return lineSegments;
     }
 
+    @Override
+    public double getArea() {
+        double area = 0.0;
+        for (LineSegment line: lineSegments) {
+            area += (line.getPoint1().x - line.getPoint2().x)
+                    * (line.getPoint1().y + line.getPoint2().y) / 2.0;
+        }
+        return area;
+    }
 }

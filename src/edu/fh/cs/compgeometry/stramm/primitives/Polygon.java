@@ -8,4 +8,6 @@ import java.util.List;
 public interface Polygon {
 
     List<LineSegment> getLines();
+
+    double getArea();
 }

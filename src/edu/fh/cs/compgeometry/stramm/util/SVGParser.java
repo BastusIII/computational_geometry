@@ -9,6 +9,7 @@ import edu.fh.cs.compgeometry.stramm.nameds.SimpleNamedPolygon;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -16,9 +17,9 @@ import java.util.regex.Pattern;
  */
 public class SVGParser {
 
-    private Pattern attributePattern = Pattern.compile("[^= ]+=\"[^\"]*\"", Pattern.DOTALL);
+    private Pattern attributePattern = Pattern.compile("[^= ]+=\"[^\"]*\"");
 
-    private Pattern pathPattern = Pattern.compile("<path([^(/>)]*)/>", Pattern.DOTALL);
+    private Pattern pathPattern = Pattern.compile("<path([^(/>)]*)/>");
 
     private Collection<NamedPolygon> polygons = new HashSet<>();
 
@@ -26,6 +27,7 @@ public class SVGParser {
 
     public void parseFile(final File file) {
 
+        long startTrrib = System.currentTimeMillis();
         try {
             Scanner pathScanner = new Scanner(file);
             String path;
@@ -35,14 +37,16 @@ public class SVGParser {
         } catch (FileNotFoundException e) {
             System.out.println(e.getLocalizedMessage());
         }
+        System.out.println("Parsed File in " + (System.currentTimeMillis() - startTrrib) + " millis.");
+
 
     }
 
     private void parsePath(String path) {
-        Scanner attributeScanner = new Scanner(path);
         Map<String, String> attributeMap = new HashMap<>();
-        String attribute;
-        while ((attribute = attributeScanner.findWithinHorizon(attributePattern, 0)) != null) {
+        Matcher matcher = attributePattern.matcher(path);
+        while (matcher.find()) {
+            String attribute = matcher.group();
             String[] attributePair = new String[2];
             int equalsPos = 0;
             while (attribute.charAt(equalsPos) != '=') {
@@ -52,7 +56,6 @@ public class SVGParser {
             attributePair[1] = attribute.substring(equalsPos + 2, attribute.length() - 1);
             attributeMap.put(attributePair[0], attributePair[1]);
         }
-
         // Add polygons.
         if (attributeMap.containsKey("d")) {
             SVGLineParser lineParser = new SVGLineParser(attributeMap.get("d"));
