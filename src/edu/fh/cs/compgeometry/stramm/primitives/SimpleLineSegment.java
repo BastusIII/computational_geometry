@@ -7,7 +7,8 @@ import com.sun.javafx.geom.Vec2d;
  */
 public class SimpleLineSegment implements LineSegment {
 
-    public static final double THRESHOLD = 1e-6; //Math.pow(10.0, -12.0);
+    // according to wiki, double has 15–17 significant decimal digits precision.
+    public static final double THRESHOLD = 1e-14; //Math.pow(10.0, -12.0);
 
     private final Vec2d point1;
 
@@ -37,7 +38,9 @@ public class SimpleLineSegment implements LineSegment {
         this.point1.x * point.y -
         this.point1.y * point2.x +
         this.point1.x * point2.y;
-        return Math.abs(ccw) > THRESHOLD ? ccw : 0;
+        // The size of the ccw-value is the length of the perpendicular (germ: Lot) from the point to the line
+        // The threshold guarantees, that Points very near to a line will be detected as on the line
+        return Math.abs(ccw) >= THRESHOLD ? ccw : 0;
     }
 
     @Override
@@ -48,12 +51,17 @@ public class SimpleLineSegment implements LineSegment {
         }
         double ccwOtherOne = this.ccw(lineSegment.getPoint1());
         double ccwOtherTwo = this.ccw(lineSegment.getPoint2());
+        // special case 2: the line segments are colinear
         if (ccwOtherOne == 0 && ccwOtherTwo == 0) {
             return isColinearOverlapping(lineSegment);
         }
+        double ccwThisOne = lineSegment.ccw(this.getPoint1());
+        double ccwThisTwo = lineSegment.ccw(this.getPoint2());
+        // check if the given line segment's points are on different sides of this line segment. They may lie on the segment, too.
         boolean checkSideSelf = ccwOtherOne * ccwOtherTwo <= 0.0;
-        boolean checkSideGiven = lineSegment.ccw(this.getPoint1()) * lineSegment.ccw(this.getPoint2()) <= 0.0;
-
+        // check if this line segment's points are on different sides of the given line segment. They may lie on the segment, too.
+        boolean checkSideGiven = ccwThisOne * ccwThisTwo <= 0.0;
+        // the return value will be true, for each segment, the points of the other segment lie on different sides
         return checkSideSelf && checkSideGiven;
     }
 

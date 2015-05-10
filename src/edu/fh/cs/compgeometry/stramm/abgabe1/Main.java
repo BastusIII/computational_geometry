@@ -24,8 +24,8 @@ public class Main {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
         fileNames.add("s_1000_1.dat");
-        fileNames.add("s_10000_1.dat");
-        fileNames.add("s_100000_1.dat");
+        //fileNames.add("s_10000_1.dat");
+        //fileNames.add("s_100000_1.dat");
 
         System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
         for (String fileName: fileNames) {
@@ -63,23 +63,22 @@ public class Main {
         System.out.println("Lines crossing in " + file.toString() + ": " + count);
         System.out.println("Time taken: " + timeTaken);
     }
-
-    /*
-    Output:
-Threshold: 1.0E-6
-Lines crossing in ./data/s_1000_1.dat: 11
-Time taken: 0.085
-Lines crossing in ./data/s_10000_1.dat: 732
-Time taken: 3.888
-Lines crossing in ./data/s_100000_1.dat: 77127
-Time taken: 359.346
-     */
-
-/*    Threshold: 1.0E-6
+}
+/*
+    Threshold: 1.0E-6
     Lines crossing in ./data/s_1000_1.dat: 11
     Time taken: 0.09
     Lines crossing in ./data/s_10000_1.dat: 732
     Time taken: 4.026
     Lines crossing in ./data/s_100000_1.dat: 77127
-    Time taken: 364.471*/
-}
+    Time taken: 364.471
+
+    Threshold: 1.0E-14
+    Lines crossing in .\data\s_1000_1.dat: 11
+    Time taken: 0.077
+    Lines crossing in .\data\s_10000_1.dat: 732
+    Time taken: 4.503
+    Lines crossing in .\data\s_100000_1.dat: 77126
+    Time taken: 360.412
+*/
+
