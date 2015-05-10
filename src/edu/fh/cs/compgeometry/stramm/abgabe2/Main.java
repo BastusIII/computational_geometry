@@ -12,6 +12,6 @@ public class Main {
     public static void main(String... args) {
         final String pathToData = "." + File.separator + "data" + File.separator;
         SVGParser parser = new SVGParser();
-        parser.readPolygons(new File(pathToData + "DeutschlandMitStaedten.svg"));
+        parser.parseFile(new File(pathToData + "DeutschlandMitStaedten.svg"));
     }
 }

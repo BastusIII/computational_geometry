@@ -1,14 +1,14 @@
 package edu.fh.cs.compgeometry.stramm.util;
 
 import com.sun.javafx.geom.Vec2d;
+import edu.fh.cs.compgeometry.stramm.nameds.NamedPoint;
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPolygon;
+import edu.fh.cs.compgeometry.stramm.nameds.SimpleNamedPoint;
 import edu.fh.cs.compgeometry.stramm.nameds.SimpleNamedPolygon;
-import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
-import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -16,65 +16,66 @@ import java.util.regex.Pattern;
  */
 public class SVGParser {
 
-    public Collection<NamedPolygon> readPolygons(final File file) {
-        Collection<NamedPolygon>  polygons = new HashSet<>();
+    private Pattern attributePattern = Pattern.compile("[^= ]+=\"[^\"]*\"", Pattern.DOTALL);
+
+    private Pattern pathPattern = Pattern.compile("<path([^(/>)]*)/>", Pattern.DOTALL);
+
+    private Collection<NamedPolygon> polygons = new HashSet<>();
+
+    private Collection<NamedPoint> points = new HashSet<>();
+
+    public void parseFile(final File file) {
+
         try {
-            StreamTokenizer pathTokenizer = new StreamTokenizer(new FileInputStream(file));
-            Pattern pathPattern = Pattern.compile("<path([^(/>)]*)/>", Pattern.DOTALL);
             Scanner pathScanner = new Scanner(file);
             String path;
             while ((path = pathScanner.findWithinHorizon(pathPattern, 0)) != null) {
-                NamedPolygon state = parsePath(path);
-                System.out.println(state);
+                parsePath(path);
             }
         } catch (FileNotFoundException e) {
             System.out.println(e.getLocalizedMessage());
         }
 
-        return polygons;
     }
 
-    private NamedPolygon parsePath(String path) {
-        Pattern attributePattern = Pattern.compile("[^= ]+=\"[^\"]*\"", Pattern.DOTALL);
+    private void parsePath(String path) {
         Scanner attributeScanner = new Scanner(path);
         Map<String, String> attributeMap = new HashMap<>();
         String attribute;
         while ((attribute = attributeScanner.findWithinHorizon(attributePattern, 0)) != null) {
-            String[] attributePair = attribute.split("=");
-            attributeMap.put(attributePair[0], attributePair[1].substring(1,attributePair[1].length()-1));
+            String[] attributePair = new String[2];
+            int equalsPos = 0;
+            while (attribute.charAt(equalsPos) != '=') {
+                equalsPos++;
+            }
+            attributePair[0] = attribute.substring(0, equalsPos);
+            attributePair[1] = attribute.substring(equalsPos + 2, attribute.length() - 1);
+            attributeMap.put(attributePair[0], attributePair[1]);
         }
-        System.out.println("! " + attributeMap.get("id"));
+
+        // Add polygons.
         if (attributeMap.containsKey("d")) {
-            return new SimpleNamedPolygon(parseLines(attributeMap.get("d")), attributeMap.get("id"));
+            SVGLineParser lineParser = new SVGLineParser(attributeMap.get("d"));
+            NamedPolygon polygon = new SimpleNamedPolygon(lineParser.parseLines(), attributeMap.get("id"));
+            System.out.println("Found polygon: " + polygon.toString());
+            polygons.add(polygon);
         }
-        return null;
+
+        // Add points.
+        if (attributeMap.containsKey("sodipodi:type")) {
+            NamedPoint point = new SimpleNamedPoint(new Vec2d(Double.parseDouble(attributeMap.get("sodipodi:cx"))
+                    , Double.parseDouble(attributeMap.get("sodipodi:cx"))),
+                    attributeMap.get("id"));
+            System.out.println("Found point: " + point.toString());
+            points.add(point);
+        }
     }
 
-    private List<LineSegment> parseLines(String d) {
-        List<LineSegment> lineSegments = new ArrayList<>();
-        String[] lines = d.split("\n");
-        Vec2d M = null;
-        Vec2d lastPoint = null;
+    public Collection<NamedPolygon> getPolygons() {
+        return polygons;
+    }
 
-        for (String line: lines) {
-            if(line.startsWith("M")) {
-                String[] coordinates = line.substring(1).split(",");
-                M = new Vec2d(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]));
-                lastPoint = M;
-            }
-
-            if(line.startsWith("l") || line.startsWith("L")) {
-                String[] coordinates = line.substring(1).split(",");
-                lineSegments.add(new SimpleLineSegment(lastPoint
-                        , new Vec2d(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]))));
-            }
-
-            if(line.startsWith("z") || line.startsWith("Z")) {
-                String[] coordinates = line.substring(1).split(",");
-                lineSegments.add(new SimpleLineSegment(lastPoint, M));
-            }
-
-        }
-        return lineSegments;
+    public Collection<NamedPoint> getPoints() {
+        return points;
     }
 }
