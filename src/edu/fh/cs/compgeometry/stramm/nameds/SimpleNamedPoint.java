@@ -36,4 +36,9 @@ public class SimpleNamedPoint implements NamedPoint {
     public String toString() {
         return name + " at " + point.x + "," + point.y;
     }
+
+    @Override
+    public Vec2d getVec2D() {
+        return point;
+    }
 }

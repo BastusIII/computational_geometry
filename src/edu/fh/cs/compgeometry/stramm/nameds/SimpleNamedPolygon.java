@@ -44,4 +44,14 @@ public class SimpleNamedPolygon implements NamedPolygon{
     public String toString() {
         return name + " with " + getLines().size() + " lines an area of " + getArea() + ".";
     }
+
+    @Override
+    public boolean containsPoint(NamedPoint point) {
+        try {
+
+            return polygon.containsPoint(point);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e.getLocalizedMessage() + "@"+ getName()+":"+point.getName());
+        }
+    }
 }

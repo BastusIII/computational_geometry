@@ -98,7 +98,7 @@ public class SVGLineParser {
     }
 
     private void closePathAbs() {
-        addPoint(M);
+        //addPoint(M);
         currentPosition++;
     }
 

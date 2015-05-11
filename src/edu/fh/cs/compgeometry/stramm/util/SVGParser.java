@@ -27,7 +27,6 @@ public class SVGParser {
 
     public void parseFile(final File file) {
 
-        long startTrrib = System.currentTimeMillis();
         try {
             Scanner pathScanner = new Scanner(file);
             String path;
@@ -37,7 +36,6 @@ public class SVGParser {
         } catch (FileNotFoundException e) {
             System.out.println(e.getLocalizedMessage());
         }
-        System.out.println("Parsed File in " + (System.currentTimeMillis() - startTrrib) + " millis.");
 
 
     }
@@ -60,16 +58,14 @@ public class SVGParser {
         if (attributeMap.containsKey("d")) {
             SVGLineParser lineParser = new SVGLineParser(attributeMap.get("d"));
             NamedPolygon polygon = new SimpleNamedPolygon(lineParser.parseLines(), attributeMap.get("id"));
-            System.out.println("Found polygon: " + polygon.toString());
             polygons.add(polygon);
         }
 
         // Add points.
         if (attributeMap.containsKey("sodipodi:type")) {
             NamedPoint point = new SimpleNamedPoint(new Vec2d(Double.parseDouble(attributeMap.get("sodipodi:cx"))
-                    , Double.parseDouble(attributeMap.get("sodipodi:cx"))),
+                    , Double.parseDouble(attributeMap.get("sodipodi:cy"))),
                     attributeMap.get("id"));
-            System.out.println("Found point: " + point.toString());
             points.add(point);
         }
     }
