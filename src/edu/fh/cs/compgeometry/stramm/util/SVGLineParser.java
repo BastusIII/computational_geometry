@@ -1,7 +1,9 @@
 package edu.fh.cs.compgeometry.stramm.util;
 
 import com.sun.javafx.geom.Vec2d;
+import edu.fh.cs.compgeometry.stramm.primitives.LinePolygon;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
+import edu.fh.cs.compgeometry.stramm.primitives.Polygon;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class SVGLineParser {
     private Vec2d lastPoint;
 
     private List<LineSegment> lineSegments = new ArrayList<>();
+
+    private List<Polygon> polygons = new ArrayList<>();
 
     public SVGLineParser(final String d) {
         this.d = d;
@@ -53,7 +57,7 @@ public class SVGLineParser {
         }
     }
 
-    public List<LineSegment> parseLines() {
+    public Polygon parseLines() throws ParserException {
         while (currentPosition < d.length()) {
             if (symbolMap.containsKey(d.charAt(currentPosition))) {
                 PathCMD command = symbolMap.get(d.charAt(currentPosition));
@@ -89,7 +93,35 @@ public class SVGLineParser {
                 currentPosition++;
             }
         }
-        return lineSegments;
+        return mergePolygons();
+    }
+
+    private Polygon mergePolygons() throws ParserException {
+        final List<LineSegment> finalLines = new ArrayList<>();
+        for (Polygon polygon : polygons) {
+            int numberOfContains = 0;
+            for (Polygon otherPolygon : polygons) {
+                if (!polygon.equals(otherPolygon)) {
+                    if (polygon.overlapsPolygon(otherPolygon)) {
+                        if (otherPolygon.containsPolygon(polygon)) {
+                            numberOfContains++;
+                        } else {
+                            if (!polygon.containsPolygon(otherPolygon)) {
+                                throw new ParserException("A polygon overlaps with another, but is not fully contained.");
+                            }
+                        }
+                    }
+                }
+            }
+            if (numberOfContains % 2 == 0) {
+                polygon.setAreaPositive();
+            } else {
+                polygon.setAreaNegative();
+            }
+
+            finalLines.addAll(polygon.getLines());
+        }
+        return new LinePolygon(finalLines);
     }
 
     private void closePathRel() {
@@ -99,6 +131,8 @@ public class SVGLineParser {
 
     private void closePathAbs() {
         //addPoint(M);
+        polygons.add(new LinePolygon(lineSegments));
+        lineSegments = new ArrayList<>();
         currentPosition++;
     }
 

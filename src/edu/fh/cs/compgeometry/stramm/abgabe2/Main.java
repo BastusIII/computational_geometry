@@ -2,6 +2,7 @@ package edu.fh.cs.compgeometry.stramm.abgabe2;
 
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPoint;
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPolygon;
+import edu.fh.cs.compgeometry.stramm.util.ParserException;
 import edu.fh.cs.compgeometry.stramm.util.SVGParser;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.io.File;
  */
 public class Main {
 
-    public static void main(String... args) {
+    public static void main(String... args) throws ParserException {
         final String pathToData = "." + File.separator + "data" + File.separator;
         SVGParser parser = new SVGParser();
         parser.parseFile(new File(pathToData + "DeutschlandMitStaedten.svg"));

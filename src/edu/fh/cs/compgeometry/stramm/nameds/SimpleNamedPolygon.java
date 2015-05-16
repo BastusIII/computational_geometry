@@ -1,15 +1,16 @@
 package edu.fh.cs.compgeometry.stramm.nameds;
 
+import com.sun.javafx.geom.Vec2d;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.Polygon;
-import edu.fh.cs.compgeometry.stramm.primitives.SimplePolygon;
+import edu.fh.cs.compgeometry.stramm.primitives.LinePolygon;
 
 import java.util.List;
 
 /**
  * Created by femy on 5/9/15.
  */
-public class SimpleNamedPolygon implements NamedPolygon{
+public class SimpleNamedPolygon implements NamedPolygon {
 
     private final Polygon polygon;
 
@@ -20,8 +21,8 @@ public class SimpleNamedPolygon implements NamedPolygon{
         this.name = name;
     }
 
-    public  SimpleNamedPolygon(List<LineSegment> lineSegments, String name) {
-        this.polygon = new SimplePolygon(lineSegments);
+    public SimpleNamedPolygon(List<LineSegment> lineSegments, String name) {
+        this.polygon = new LinePolygon(lineSegments);
         this.name = name;
     }
 
@@ -48,10 +49,39 @@ public class SimpleNamedPolygon implements NamedPolygon{
     @Override
     public boolean containsPoint(NamedPoint point) {
         try {
-
             return polygon.containsPoint(point);
         } catch (RuntimeException e) {
-            throw new RuntimeException(e.getLocalizedMessage() + "@"+ getName()+":"+point.getName());
+            throw new RuntimeException(e.getLocalizedMessage() + "@" + getName() + ":" + point.getName());
         }
+    }
+
+    @Override
+    public boolean containsPoint(Vec2d point) {
+        return polygon.containsPoint(point);
+    }
+
+    @Override
+    public boolean containsPolygon(Polygon polygon) {
+        return polygon.containsPolygon(polygon);
+    }
+
+    @Override
+    public boolean overlapsPolygon(Polygon polygon) {
+        return polygon.overlapsPolygon(polygon);
+    }
+
+    @Override
+    public void swapDirection() {
+        polygon.swapDirection();
+    }
+
+    @Override
+    public void setAreaPositive() {
+        polygon.setAreaPositive();
+    }
+
+    @Override
+    public void setAreaNegative() {
+        polygon.setAreaNegative();
     }
 }

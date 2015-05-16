@@ -3,12 +3,13 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 import com.sun.javafx.geom.Vec2d;
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by femy on 5/9/15.
  */
-public class SimplePolygon implements Polygon {
+public class LinePolygon implements Polygon {
 
     private enum CrossingType {
         GOING_IN,
@@ -18,7 +19,7 @@ public class SimplePolygon implements Polygon {
 
     private final List<LineSegment> lineSegments;
 
-    public SimplePolygon(List<LineSegment> lineSegments) {
+    public LinePolygon(List<LineSegment> lineSegments) {
         this.lineSegments = lineSegments;
     }
 
@@ -40,9 +41,14 @@ public class SimplePolygon implements Polygon {
 
     @Override
     public boolean containsPoint(NamedPoint point) {
+        return containsPoint(point.getVec2D());
+    }
+
+    @Override
+    public boolean containsPoint(Vec2d point) {
         // Works only for consecutive lines.
         Vec2d pointOutside = getPointOutside();
-        LineSegment testLine = new SimpleLineSegment(pointOutside, point.getVec2D());
+        LineSegment testLine = new SimpleLineSegment(pointOutside, point);
         int timesWentInside = 0;
 
         CrossingType lastTest = CrossingType.NOT_CROSSING;
@@ -74,6 +80,58 @@ public class SimplePolygon implements Polygon {
         }
 
         return timesWentInside == 1;
+    }
+
+    @Override
+    public boolean containsPolygon(Polygon polygon) {
+        for (LineSegment line: polygon.getLines()) {
+            if (!this.containsPoint(line.getPoint1())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean overlapsPolygon(Polygon polygon) {
+        for (LineSegment line: polygon.getLines()) {
+            if (this.containsPoint(line.getPoint1())) {
+                return true;
+            }
+        }
+        // Check revers, if one point of the other polygon lies within this one and not vice versa.
+        for (LineSegment line: this.getLines()) {
+            if (polygon.containsPoint(line.getPoint1())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void swapDirection() {
+        List<LineSegment> newLines = new ArrayList<>();
+        for (LineSegment line: this.getLines()) {
+            newLines.add(new SimpleLineSegment(line.getPoint2(), line.getPoint1()));
+        }
+        this.getLines().clear();
+        for (int i = newLines.size(); i > 0 ; --i) {
+            this.getLines().add(newLines.get(i-1));
+        }
+    }
+
+    @Override
+    public void setAreaPositive() {
+        if(getArea() <= 0) {
+            swapDirection();
+        }
+    }
+
+    @Override
+    public void setAreaNegative() {
+        if(getArea() >= 0) {
+            swapDirection();
+        }
     }
 
     private Vec2d getPointOutside() {

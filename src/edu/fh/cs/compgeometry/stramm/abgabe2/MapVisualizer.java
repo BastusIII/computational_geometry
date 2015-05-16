@@ -3,6 +3,7 @@ package edu.fh.cs.compgeometry.stramm.abgabe2;
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPoint;
 import edu.fh.cs.compgeometry.stramm.nameds.NamedPolygon;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
+import edu.fh.cs.compgeometry.stramm.util.ParserException;
 import edu.fh.cs.compgeometry.stramm.util.SVGParser;
 
 import java.awt.*;
@@ -38,7 +39,7 @@ public class MapVisualizer extends JPanel {
         }
 
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParserException {
         JFrame frame = new JFrame();
         frame.setTitle("Deutschland");
         frame.setSize(592, 801);

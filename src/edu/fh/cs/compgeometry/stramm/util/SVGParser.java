@@ -25,7 +25,7 @@ public class SVGParser {
 
     private Collection<NamedPoint> points = new HashSet<>();
 
-    public void parseFile(final File file) {
+    public void parseFile(final File file) throws ParserException {
 
         try {
             Scanner pathScanner = new Scanner(file);
@@ -40,7 +40,7 @@ public class SVGParser {
 
     }
 
-    private void parsePath(String path) {
+    private void parsePath(String path) throws ParserException {
         Map<String, String> attributeMap = new HashMap<>();
         Matcher matcher = attributePattern.matcher(path);
         while (matcher.find()) {
