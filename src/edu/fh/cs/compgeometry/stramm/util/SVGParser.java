@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by femy on 5/9/15.
+ * Parser for SVG-files.
  */
 public class SVGParser {
 

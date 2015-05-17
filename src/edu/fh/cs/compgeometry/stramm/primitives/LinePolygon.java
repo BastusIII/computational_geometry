@@ -32,7 +32,7 @@ public class LinePolygon implements Polygon {
     @Override
     public double getArea() {
         double area = 0.0;
-        for (LineSegment line: lineSegments) {
+        for (LineSegment line : lineSegments) {
             area += (line.getPoint1().x - line.getPoint2().x)
                     * (line.getPoint1().y + line.getPoint2().y) / 2.0;
         }
@@ -53,25 +53,45 @@ public class LinePolygon implements Polygon {
 
         CrossingType lastTest = CrossingType.NOT_CROSSING;
 
-        for(LineSegment line: getLines()) {
-            if(testLine.isCrossing(line)) {
+        // Check intersects for all lines.
+        for (int i = 0; i < this.getLines().size(); i++) {
+            LineSegment line = this.getLines().get(i);
+            if (testLine.isCrossing(line)) {
                 if (line.ccw(pointOutside) < 0) {
-                    if(lastTest != CrossingType.GOING_IN) {
+                    // If the test line crosses two consecutive lines in the same direction,
+                    // it is assumed to have crossed the corner.
+
+                    if (lastTest != CrossingType.GOING_IN
+                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
                         timesWentInside++;
                         lastTest = CrossingType.GOING_IN;
                     } else {
                         lastTest = CrossingType.NOT_CROSSING;
                     }
+
                 } else {
-                    if(lastTest != CrossingType.GOING_OUT) {
+                    if (lastTest != CrossingType.GOING_OUT
+                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
                         timesWentInside--;
                         lastTest = CrossingType.GOING_OUT;
-                    } else {
+                    }else{
                         lastTest = CrossingType.NOT_CROSSING;
                     }
                 }
             } else {
                 lastTest = CrossingType.NOT_CROSSING;
+            }
+        }
+
+        // Fix if test line crosses the corner of the first and last line.
+        LineSegment firstLine = this.getLines().get(0);
+        LineSegment lastLine = this.getLines().get(this.getLines().size() - 1);
+        if (testLine.isCrossing(firstLine) && testLine.isCrossing(lastLine)) {
+            if (firstLine.ccw(pointOutside) > 0 && lastLine.ccw(pointOutside) > 0) {
+                timesWentInside++;
+            }
+            if (firstLine.ccw(pointOutside) < 0 && lastLine.ccw(pointOutside) < 0) {
+                timesWentInside--;
             }
         }
 
@@ -84,7 +104,7 @@ public class LinePolygon implements Polygon {
 
     @Override
     public boolean containsPolygon(Polygon polygon) {
-        for (LineSegment line: polygon.getLines()) {
+        for (LineSegment line : polygon.getLines()) {
             if (!this.containsPoint(line.getPoint1())) {
                 return false;
             }
@@ -94,13 +114,13 @@ public class LinePolygon implements Polygon {
 
     @Override
     public boolean overlapsPolygon(Polygon polygon) {
-        for (LineSegment line: polygon.getLines()) {
+        for (LineSegment line : polygon.getLines()) {
             if (this.containsPoint(line.getPoint1())) {
                 return true;
             }
         }
         // Check revers, if one point of the other polygon lies within this one and not vice versa.
-        for (LineSegment line: this.getLines()) {
+        for (LineSegment line : this.getLines()) {
             if (polygon.containsPoint(line.getPoint1())) {
                 return true;
             }
@@ -111,25 +131,25 @@ public class LinePolygon implements Polygon {
     @Override
     public void swapDirection() {
         List<LineSegment> newLines = new ArrayList<>();
-        for (LineSegment line: this.getLines()) {
+        for (LineSegment line : this.getLines()) {
             newLines.add(new SimpleLineSegment(line.getPoint2(), line.getPoint1()));
         }
         this.getLines().clear();
-        for (int i = newLines.size(); i > 0 ; --i) {
-            this.getLines().add(newLines.get(i-1));
+        for (int i = newLines.size(); i > 0; --i) {
+            this.getLines().add(newLines.get(i - 1));
         }
     }
 
     @Override
     public void setAreaPositive() {
-        if(getArea() <= 0) {
+        if (getArea() <= 0) {
             swapDirection();
         }
     }
 
     @Override
     public void setAreaNegative() {
-        if(getArea() >= 0) {
+        if (getArea() >= 0) {
             swapDirection();
         }
     }
@@ -138,7 +158,7 @@ public class LinePolygon implements Polygon {
         double minX = Double.MAX_VALUE;
         double minY = Double.MAX_VALUE;
 
-        for(LineSegment line: getLines()) {
+        for (LineSegment line : getLines()) {
             minX = Math.min(Math.min(line.getPoint1().x, line.getPoint2().x), minX);
             minY = Math.min(Math.min(line.getPoint1().y, line.getPoint2().y), minY);
         }

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.StringTokenizer;
 
 /**
- * Created by femy on 4/16/15.
+ * Parser for lines from a Fischer formatted file.
  */
 public class LineSegmentParser {
 

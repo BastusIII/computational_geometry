@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by femy on 5/10/15.
+ * Parser for d-elements of SVG Paths.
  */
 public class SVGLineParser {
 
@@ -38,6 +38,9 @@ public class SVGLineParser {
         }
     }
 
+    /**
+     * SVG path commands.
+     */
     private enum PathCMD {
         MOVETO_ABS('M'),
         MOVETO_REL('m'),
@@ -57,6 +60,11 @@ public class SVGLineParser {
         }
     }
 
+    /**
+     * Parse d-element. Fixes rotation of inner polygons.
+     * @return The parsed polygon.
+     * @throws ParserException If polygons are not valid for area calculations.
+     */
     public Polygon parseLines() throws ParserException {
         while (currentPosition < d.length()) {
             if (symbolMap.containsKey(d.charAt(currentPosition))) {
@@ -99,6 +107,7 @@ public class SVGLineParser {
     private Polygon mergePolygons() throws ParserException {
         final List<LineSegment> finalLines = new ArrayList<>();
         for (Polygon polygon : polygons) {
+            // Count how many times the polygon is contained in another.
             int numberOfContains = 0;
             for (Polygon otherPolygon : polygons) {
                 if (!polygon.equals(otherPolygon)) {
@@ -113,6 +122,7 @@ public class SVGLineParser {
                     }
                 }
             }
+            // Set area of polygons, that are an uneven amount inside of others negative.
             if (numberOfContains % 2 == 0) {
                 polygon.setAreaPositive();
             } else {

@@ -18,7 +18,9 @@ public class Main {
         parser.parseFile(new File(pathToData + "DeutschlandMitStaedten.svg"));
 
         for(NamedPolygon polygon: parser.getPolygons()) {
-            System.out.println("Found " + polygon.getName() + " with a size of: " + polygon.getArea());
+            double area = polygon.getArea();
+            System.out.println("Found " + polygon.getName() + " with a size of: " + area
+            + " approximately " + String.format("%.0f", area * 70550.19 / 60026.125) + " km².");
         }
 
         for(NamedPoint point: parser.getPoints()) {
