@@ -15,13 +15,29 @@ import java.util.StringTokenizer;
 public class LineSegmentParser {
 
     public Collection<LineSegment> readLineSegments(final File file) throws FileNotFoundException {
+        return this.readLineSegments(file, false);
+    }
+
+    public Collection<LineSegment> readLineSegments(final File file, boolean sanitize) throws FileNotFoundException {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 
         final Collection<LineSegment> lineSegments = new HashSet<>();
 
         try {
-            while (reader.ready()) {
-                lineSegments.add(readLine(reader.readLine()));
+            if(sanitize) {
+                while (reader.ready()) {
+                    LineSegment currentSegment = readLine(reader.readLine());
+                    // Same x value of line points, thus either vertical or equal points. Both is invalid
+                    if(currentSegment.getPoint1().x == currentSegment.getPoint2().x) {
+                        continue;
+                    }
+                    lineSegments.add(readLine(reader.readLine()));
+                }
+            }
+            else {
+                while (reader.ready()) {
+                    lineSegments.add(readLine(reader.readLine()));
+                }
             }
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
