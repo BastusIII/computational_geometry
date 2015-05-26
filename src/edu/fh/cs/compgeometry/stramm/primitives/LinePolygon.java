@@ -52,54 +52,64 @@ public class LinePolygon implements Polygon {
         int timesWentInside = 0;
 
         CrossingType lastTest = CrossingType.NOT_CROSSING;
+        LineSegment firstLineOfSubPolygon = this.getLine(0);
 
         // Check intersects for all lines.
         for (int i = 0; i < this.getLines().size(); i++) {
-            LineSegment line = this.getLines().get(i);
-            if (testLine.isCrossing(line)) {
-                if (line.ccw(pointOutside) < 0) {
-                    // If the test line crosses two consecutive lines in the same direction,
-                    // it is assumed to have crossed the corner.
-
-                    if (lastTest != CrossingType.GOING_IN
-                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
-                        timesWentInside++;
-                        lastTest = CrossingType.GOING_IN;
-                    } else {
-                        lastTest = CrossingType.NOT_CROSSING;
-                    }
-
-                } else {
-                    if (lastTest != CrossingType.GOING_OUT
-                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
-                        timesWentInside--;
-                        lastTest = CrossingType.GOING_OUT;
-                    }else{
-                        lastTest = CrossingType.NOT_CROSSING;
-                    }
+            LineSegment currentLine = this.getLine(i);
+            LineSegment nextLine = this.getLine((i + 1) % this.getLines().size());
+            // If the next line is not a consecutive one, use first line of subpolygon instead.
+            if (!currentLine.getPoint2().equals(nextLine.getPoint1())) {
+                if (!currentLine.getPoint2().equals(firstLineOfSubPolygon.getPoint1())) {
+                    throw new RuntimeException("Subpolygon was not closed.");
                 }
-            } else {
-                lastTest = CrossingType.NOT_CROSSING;
+                LineSegment tempLine = nextLine;
+                nextLine = firstLineOfSubPolygon;
+                firstLineOfSubPolygon = tempLine;
             }
+            CrossingType currentTest = getCrossingType(currentLine, testLine);
+            CrossingType nextTest = getCrossingType(nextLine, testLine);
+
+            if (currentTest.equals(nextTest)) {
+                // The corner of the current and next line has been crossed.
+                // Do nothing, intersect is counted in next test.
+            } else {
+                switch (currentTest) {
+                    case GOING_IN:
+                        timesWentInside++;
+                        break;
+                    case GOING_OUT:
+                        timesWentInside--;
+                        break;
+                    default:
+                        // Nothing to count.
+                }
+            }
+
         }
 
-        // Fix if test line crosses the corner of the first and last line.
-        LineSegment firstLine = this.getLines().get(0);
-        LineSegment lastLine = this.getLines().get(this.getLines().size() - 1);
-        if (testLine.isCrossing(firstLine) && testLine.isCrossing(lastLine)) {
-            if (firstLine.ccw(pointOutside) > 0 && lastLine.ccw(pointOutside) > 0) {
-                timesWentInside++;
-            }
-            if (firstLine.ccw(pointOutside) < 0 && lastLine.ccw(pointOutside) < 0) {
-                timesWentInside--;
-            }
-        }
 
         if (timesWentInside < 0 || timesWentInside > 1) {
             throw new RuntimeException("Point inside test failed. Counted " + timesWentInside + "going ins.");
         }
 
         return timesWentInside == 1;
+    }
+
+    private CrossingType getCrossingType(LineSegment line, LineSegment testLine) {
+        if (!testLine.isCrossing(line)) {
+            return CrossingType.NOT_CROSSING;
+        } else {
+            if (line.ccw(testLine.getPoint1()) < 0) {
+                return CrossingType.GOING_IN;
+            } else {
+                return CrossingType.GOING_OUT;
+            }
+        }
+    }
+
+    private LineSegment getLine(int index) {
+        return this.getLines().get(index);
     }
 
     @Override
@@ -164,7 +174,7 @@ public class LinePolygon implements Polygon {
         }
 
         if (minX < 1000.0d - Double.MAX_VALUE || minY < 1000.0d - Double.MAX_VALUE) {
-            throw new RuntimeException("getPointOutside() badly implemented!");
+            throw new RuntimeException("getPointOutside() poorly implemented!");
         }
 
         return new Vec2d(minX, minY);
