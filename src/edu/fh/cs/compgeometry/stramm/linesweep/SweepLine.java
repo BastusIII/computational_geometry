@@ -1,39 +1,23 @@
 package edu.fh.cs.compgeometry.stramm.linesweep;
 
-import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
+import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
- * Created by Basti on 21.05.2015.
+ * Created by Basti on 26.05.2015.
  */
-public class SweepLine {
+public interface SweepLine {
 
-    private  final List<LineSegment> lineSegments = new ArrayList<>();
+    void proceed();
 
-    private  final List<Event> events;
+    double getPosition();
 
-    public SweepLine(List<Event> events) {
-        this.events = events;
-    }
+    boolean finished();
 
-    public void changeNeighbors(LineSegment lineSegment1, LineSegment lineSegment2) {
+    Collection<Intersection> getIntersections();
 
-    }
+    EventList getEventList();
 
-    public void insertLine(LineSegment lineSegment1) {
-
-        // TODO: Einfügen an die richtige Stelle
-        lineSegments.add(lineSegment1);
-        // TODO: Schnittberechung der neuen Neighbors -> auslagern in subclass
-    }
-
-    public void removeLine(LineSegment lineSegment1) {
-
-    }
-
-    public void setX(double xValue) {
-        // voodoo
-    }
+    Neighborhood getNeighborhood();
 }

@@ -23,7 +23,7 @@ public interface LineSegment {
 
     /**
      * Return the ccw value of a given point to the line segment itsself.
-     *
+     * <p>
      * If the ccw value is 0, this means the point lies on the line defined by the line segment.
      *
      * @param point the point.
@@ -40,4 +40,12 @@ public interface LineSegment {
     boolean isCrossing(LineSegment lineSegment);
 
     boolean isOnLine(Vec2d point);
+
+    /**
+     * Calculates the intersection point between this and the given line segment.
+     *
+     * @param lineSegment line segment.
+     * @return the intersection point.
+     */
+    Vec2d calcIntersection(LineSegment lineSegment);
 }

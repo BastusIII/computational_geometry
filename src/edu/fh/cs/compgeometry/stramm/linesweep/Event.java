@@ -5,5 +5,7 @@ package edu.fh.cs.compgeometry.stramm.linesweep;
  */
 public interface Event {
 
-    public void handle();
+    void handle();
+
+    double getXVal();
 }

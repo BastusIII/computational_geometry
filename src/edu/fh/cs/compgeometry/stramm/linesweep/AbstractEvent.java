@@ -14,12 +14,8 @@ public abstract class AbstractEvent implements Event {
         this.xValue = xValue;
     }
 
-    public double getxValue() {
-        return xValue;
-    }
-
     @Override
-    public void handle() {
-        sweepLine.setX(this.getxValue());
+    public double getXVal() {
+        return xValue;
     }
 }
