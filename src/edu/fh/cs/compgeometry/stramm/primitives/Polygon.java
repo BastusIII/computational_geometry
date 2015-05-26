@@ -12,18 +12,21 @@ public interface Polygon {
 
     /**
      * Returnes all lines of the border of this polygon.
+     *
      * @return The border lines.
      */
     List<LineSegment> getLines();
 
     /**
      * Returns the area of the polygon.
+     *
      * @return The area.
      */
     double getArea();
 
     /**
      * Checks if a point lies in the polygon.
+     *
      * @param point The point to test.
      * @return true if the point lies within the polygon.
      */
@@ -31,6 +34,7 @@ public interface Polygon {
 
     /**
      * Checks if a point lies in the polygon.
+     *
      * @param point The point to test.
      * @return true if the point lies within the polygon.
      */
@@ -38,6 +42,7 @@ public interface Polygon {
 
     /**
      * Checks if a polygon is fully contained by this polygon.
+     *
      * @param polygon The polygon to test.
      * @return true if the polygon is fully contained.
      */
@@ -46,6 +51,7 @@ public interface Polygon {
 
     /**
      * Checks if the given polygon has overlapping areas with  this one.
+     *
      * @param polygon The polygon to test.
      * @return true if the polygons have overlapping areas.
      */

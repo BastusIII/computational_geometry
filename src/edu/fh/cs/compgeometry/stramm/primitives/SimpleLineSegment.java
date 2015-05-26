@@ -33,11 +33,11 @@ public class SimpleLineSegment implements LineSegment {
     @Override
     public double ccw(Vec2d point) {
         double ccw = this.point1.y * point.x -
-        this.point2.y * point.x +
-        this.point2.x * point.y -
-        this.point1.x * point.y -
-        this.point1.y * point2.x +
-        this.point1.x * point2.y;
+                this.point2.y * point.x +
+                this.point2.x * point.y -
+                this.point1.x * point.y -
+                this.point1.y * point2.x +
+                this.point1.x * point2.y;
         // The size of the ccw-value is the length of the perpendicular (germ: Lot) from the point to the line
         // The threshold guarantees, that Points very near to a line will be detected as on the line
         return Math.abs(ccw) >= THRESHOLD ? ccw : 0;
@@ -46,7 +46,7 @@ public class SimpleLineSegment implements LineSegment {
     @Override
     public boolean isCrossing(LineSegment lineSegment) {
         // No threshold test, data is even more fuzzy!!!
-        if(this.point1.equals(this.point2)) {
+        if (this.point1.equals(this.point2)) {
             return lineSegment.isOnLine(this.point1);
         }
         double ccwOtherOne = this.ccw(lineSegment.getPoint1());
@@ -84,7 +84,15 @@ public class SimpleLineSegment implements LineSegment {
     }
 
     @Override
+    public Vec2d calcIntersection(LineSegment lineSegment) {
+        // TODO: implement
+        // see http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect for algorithm details
+        return null;
+    }
+
+    @Override
     public String toString() {
         return point1.x + ":" + point1.y + "->" + point2.x + ":" + point2.y;
     }
+
 }

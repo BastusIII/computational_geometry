@@ -11,18 +11,11 @@ import java.util.List;
  */
 public class LinePolygon implements Polygon {
 
-    private enum CrossingType {
-        GOING_IN,
-        GOING_OUT,
-        NOT_CROSSING;
-    }
-
     private final List<LineSegment> lineSegments;
 
     public LinePolygon(List<LineSegment> lineSegments) {
         this.lineSegments = lineSegments;
     }
-
 
     @Override
     public List<LineSegment> getLines() {
@@ -62,7 +55,7 @@ public class LinePolygon implements Polygon {
                     // it is assumed to have crossed the corner.
 
                     if (lastTest != CrossingType.GOING_IN
-                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
+                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2()))) {
                         timesWentInside++;
                         lastTest = CrossingType.GOING_IN;
                     } else {
@@ -71,10 +64,10 @@ public class LinePolygon implements Polygon {
 
                 } else {
                     if (lastTest != CrossingType.GOING_OUT
-                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2())) ) {
+                            || (i > 1 && !line.getPoint1().equals(this.getLines().get(i - 1).getPoint2()))) {
                         timesWentInside--;
                         lastTest = CrossingType.GOING_OUT;
-                    }else{
+                    } else {
                         lastTest = CrossingType.NOT_CROSSING;
                     }
                 }
@@ -168,5 +161,11 @@ public class LinePolygon implements Polygon {
         }
 
         return new Vec2d(minX, minY);
+    }
+
+    private enum CrossingType {
+        GOING_IN,
+        GOING_OUT,
+        NOT_CROSSING;
     }
 }
