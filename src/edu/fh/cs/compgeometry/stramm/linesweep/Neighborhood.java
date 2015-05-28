@@ -1,23 +1,15 @@
 package edu.fh.cs.compgeometry.stramm.linesweep;
 
-import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
+import java.util.Comparator;
 
 /**
  * Created by Basti on 26.05.2015.
- * TODO: check if all methods are needed
  */
-public interface Neighborhood {
+public interface Neighborhood extends Comparator<Neighbor> {
 
-    void toggleNeighbors(LineSegment lower);
+    boolean toggleNeighbors(Neighbor first, Neighbor second);
 
-    void toggleNeighbors(LineSegment first, LineSegment second);
+    boolean addNeighbor(Neighbor newNeighbor);
 
-    void addNeighborAbove(LineSegment newNeighbor, LineSegment below);
-
-    void addNeighbor(LineSegment newNeighbor, int index);
-
-    void removeNeighborAbove(LineSegment neighbor);
-
-    void removeNeighbor(int index);
-
+    boolean removeNeighbor(Neighbor neighbor);
 }

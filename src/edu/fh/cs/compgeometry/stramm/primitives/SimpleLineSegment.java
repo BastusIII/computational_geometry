@@ -84,15 +84,7 @@ public class SimpleLineSegment implements LineSegment {
     }
 
     @Override
-    public Vec2d calcIntersection(LineSegment lineSegment) {
-        // TODO: implement
-        // see http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect for algorithm details
-        return null;
-    }
-
-    @Override
     public String toString() {
         return point1.x + ":" + point1.y + "->" + point2.x + ":" + point2.y;
     }
-
 }

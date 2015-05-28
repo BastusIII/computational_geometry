@@ -10,19 +10,19 @@ import java.util.Collection;
 public class Intersection {
 
     private Vec2d intersectionPoint;
-    private Collection<LineSegment> lines;
+    private Collection<? extends LineSegment> lines;
 
-    public Intersection(Vec2d intersectionPoint, Collection<LineSegment> lines) {
+    public Intersection(Vec2d intersectionPoint, Collection<? extends LineSegment> lines) {
         this.intersectionPoint = intersectionPoint;
         this.lines = lines;
     }
 
-    public Collection<LineSegment> getLines() {
+    public Collection<? extends LineSegment> getLines() {
 
         return lines;
     }
 
-    public void setLines(Collection<LineSegment> lines) {
+    public void setLines(Collection<? extends LineSegment> lines) {
         this.lines = lines;
     }
 
@@ -33,5 +33,18 @@ public class Intersection {
 
     public void setIntersectionPoint(Vec2d intersectionPoint) {
         this.intersectionPoint = intersectionPoint;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuffer = new StringBuilder();
+        for (LineSegment lineSegment : this.getLines()) {
+            stringBuffer.append(lineSegment);
+            stringBuffer.append(" X ");
+        }
+        stringBuffer.delete(stringBuffer.length() - 3, stringBuffer.length());
+        stringBuffer.append(" at ");
+        stringBuffer.append(this.getIntersectionPoint());
+        return stringBuffer.toString();
     }
 }

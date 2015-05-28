@@ -56,7 +56,8 @@ public class SimpleSweepLine implements SweepLine {
     }
 
     private void insertEvents(final LineSegment lineSegment) {
-        eventList.addEvent(new StartPointEvent(this, Math.min(lineSegment.getPoint1().x, lineSegment.getPoint2().x)));
-        eventList.addEvent(new EndPointEvent(this, Math.max(lineSegment.getPoint1().x, lineSegment.getPoint2().x)));
+        Neighbor neighbor = new SimpleNeighbor(lineSegment);
+        eventList.addEvent(new StartPointEvent(this, Math.min(lineSegment.getPoint1().x, lineSegment.getPoint2().x), neighbor));
+        eventList.addEvent(new EndPointEvent(this, Math.max(lineSegment.getPoint1().x, lineSegment.getPoint2().x), neighbor));
     }
 }

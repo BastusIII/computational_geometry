@@ -40,12 +40,4 @@ public interface LineSegment {
     boolean isCrossing(LineSegment lineSegment);
 
     boolean isOnLine(Vec2d point);
-
-    /**
-     * Calculates the intersection point between this and the given line segment.
-     *
-     * @param lineSegment line segment.
-     * @return the intersection point.
-     */
-    Vec2d calcIntersection(LineSegment lineSegment);
 }

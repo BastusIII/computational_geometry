@@ -30,6 +30,6 @@ public class SimpleEventList extends AbstractEventList {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return eventList.isEmpty();
     }
 }
