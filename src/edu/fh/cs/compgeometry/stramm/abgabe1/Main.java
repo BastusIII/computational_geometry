@@ -3,10 +3,12 @@ package edu.fh.cs.compgeometry.stramm.abgabe1;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 import edu.fh.cs.compgeometry.stramm.util.LineSegmentParser;
+import edu.fh.cs.compgeometry.stramm.util.MatlabValidation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,13 +21,17 @@ import java.util.List;
  */
 public class Main {
 
+    private static final boolean VALIDATE = true;
+    private static final boolean DEBUG = false;
+
     public static void main(String[] args) {
 
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
-        fileNames.add("s_1000_1.dat");
+        //fileNames.add("s_1000_1.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
+        fileNames.add("test.dat");
 
         System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
         for (String fileName: fileNames) {
@@ -45,6 +51,7 @@ public class Main {
         }
 
         List<LineSegment> lineList = new ArrayList<>(lineSegments);
+        List<List<LineSegment>> intersections = new ArrayList<>();
 
         long millis = System.currentTimeMillis();
         int count = 0;
@@ -53,12 +60,22 @@ public class Main {
             for (int j = i + 1; j < lineList.size(); j++) {
                 if(lineList.get(i).isCrossing(lineList.get(j))) {
                     count++;
-                    //System.out.println(lineList.get(i)+" X "+lineList.get(j));
+                    intersections.add(new ArrayList<>(Arrays.asList(lineList.get(i), lineList.get(j))));
                 }
             }
         }
 
         double timeTaken = (double)(System.currentTimeMillis() - millis) / 1000;
+
+        if(DEBUG) {
+            for(List<LineSegment> intersection: intersections) {
+                System.out.println(lineList.get(0) + " X " + lineList.get(1));
+            }
+        }
+
+        if(VALIDATE) {
+            MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 2, false);
+        }
 
         System.out.println("Lines crossing in " + file.toString() + ": " + count);
         System.out.println("Time taken: " + timeTaken);

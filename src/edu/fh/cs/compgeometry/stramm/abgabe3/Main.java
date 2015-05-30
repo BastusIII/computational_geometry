@@ -8,6 +8,7 @@ import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
 import edu.fh.cs.compgeometry.stramm.util.LineSegmentParser;
+import edu.fh.cs.compgeometry.stramm.util.MatlabValidation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,14 +22,16 @@ import java.util.List;
 public class Main {
 
     public static final boolean DEBUG = false;
+    private static final boolean VALIDATE = true;
 
     public static void main(String[] args) {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
-        fileNames.add("s_1000_1.dat");
+        //fileNames.add("s_1000_1.dat");
+        fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
-        //fileNames.add("test.dat");
+        //fileNames.add("test2.dat");
 
         for (String fileName : fileNames) {
             crossLinesFromFile(new File(pathToData + fileName));
@@ -68,6 +71,10 @@ public class Main {
                 stringBuffer.append(System.lineSeparator());
             }
             System.out.println(stringBuffer.toString());
+        }
+
+        if(VALIDATE) {
+            MatlabValidation.generateMatlabIntersectionPointValidationScript(sweepLine.getIntersections(), "validate_sweep_line", 1, true);
         }
     }
     /*

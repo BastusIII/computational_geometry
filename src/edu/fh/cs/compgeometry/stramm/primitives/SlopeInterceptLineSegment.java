@@ -20,7 +20,7 @@ public class SlopeInterceptLineSegment extends SimpleLineSegment implements Inte
         double xDiff = this.getPoint2().x - this.getPoint1().x;
         double yDiff = this.getPoint2().y - this.getPoint1().y;
         if (yDiff == 0.0) {
-            return Double.NaN;
+            return 0.0;
         }
         return xDiff / yDiff;
     }
