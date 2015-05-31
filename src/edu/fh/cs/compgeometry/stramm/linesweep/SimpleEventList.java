@@ -13,18 +13,29 @@ public class SimpleEventList extends AbstractEventList {
 
     @Override
     public void addEvent(Event event) {
-        eventList.add(event);
-        Collections.sort(eventList, this);
+        // insert the event only if it is on the right side of the sweep position and not already contained
+        if(this.getPosition() < event.getXVal() && !eventList.contains(event)) {
+            eventList.add(event);
+            Collections.sort(eventList, this);
+        }
     }
 
     @Override
     public void handleEvent() {
-        eventList.get(0).handle();
+        Event toHandle = eventList.get(0);
+        boolean newRelations = toHandle.handle();
+
         eventList.remove(0);
+        if(newRelations && getPosition() == toHandle.getXVal()) {
+            this.addError("WARNING: EventList: Occurrence of events with the same x value: "+eventList.get(0)+" and "+toHandle);
+        }
     }
 
     @Override
     public double getPosition() {
+        if(eventList.isEmpty()) {
+            return Double.NEGATIVE_INFINITY;
+        }
         return eventList.get(0).getXVal();
     }
 

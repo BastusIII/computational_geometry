@@ -13,14 +13,11 @@ public abstract class AbstractEvent implements Event {
 
     private final SweepLine sweepLine;
 
-    private final List<Neighbor> myNeighbors = new ArrayList<>();
-
     private final double xValue;
 
-    protected AbstractEvent(SweepLine sweepLine, double xValue, Neighbor... neighbors) {
+    protected AbstractEvent(SweepLine sweepLine, double xValue) {
         this.sweepLine = sweepLine;
         this.xValue = xValue;
-        myNeighbors.addAll(Arrays.asList(neighbors));
     }
 
     @Override
@@ -34,32 +31,22 @@ public abstract class AbstractEvent implements Event {
     }
 
     @Override
-    public List<Neighbor> getMyNeighbors() {
-        return myNeighbors;
-    }
-
-    @Override
-    public void updateNeighbors() {
-        for (Neighbor neighbor : this.getMyNeighbors()) {
-            neighbor.updateYVal(this.getXVal());
-            if (neighbor.getNeighborAbove() != null) {
-                neighbor.getNeighborAbove().updateYVal(this.getXVal());
-            }
-            if (neighbor.getNeighborBelow() != null) {
-                neighbor.getNeighborBelow().updateYVal(this.getXVal());
-            }
-        }
-    }
-
-
-    protected void checkIntersection(Neighbor myNeighbor, Neighbor neighbor) {
-        if (neighbor != null) {
+    public void checkIntersection(Neighbor myNeighbor, Neighbor neighbor) {
+        if(myNeighbor != null && neighbor != null) {
             Vec2d intersection = myNeighbor.calcIntersection(neighbor);
-            // the intersection lies right of the SweepLine and thus has to be observed
-            if (intersection != null && intersection.x > this.getXVal()) {
+            if (intersection != null) {
                 Event event = new IntersectionEvent(this.getSweepLine(), intersection, myNeighbor, neighbor);
                 getSweepLine().getEventList().addEvent(event);
             }
         }
+    }
+    @Override
+    public boolean checkNewRelations(Neighbor[][] relations) {
+        boolean newRelations = false;
+        for(Neighbor[] relation: relations) {
+            newRelations = relation[0] != null && relation[1] != null;
+            this.checkIntersection(relation[0], relation[1]);
+        }
+        return newRelations;
     }
 }

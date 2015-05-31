@@ -2,6 +2,7 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 
 import com.sun.javafx.geom.Vec2d;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -10,19 +11,19 @@ import java.util.Collection;
 public class Intersection {
 
     private Vec2d intersectionPoint;
-    private Collection<? extends LineSegment> lines;
+    LineSegment[] lines;
 
-    public Intersection(Vec2d intersectionPoint, Collection<? extends LineSegment> lines) {
+    public Intersection(Vec2d intersectionPoint, LineSegment... lines) {
         this.intersectionPoint = intersectionPoint;
         this.lines = lines;
     }
 
     public Collection<? extends LineSegment> getLines() {
 
-        return lines;
+        return Arrays.asList(lines);
     }
 
-    public void setLines(Collection<? extends LineSegment> lines) {
+    public void setLines(LineSegment... lines) {
         this.lines = lines;
     }
 

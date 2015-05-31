@@ -8,29 +8,40 @@ import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
  */
 public class IntersectionEvent extends AbstractEvent {
 
-    private Vec2d intersection = null;
+    private Vec2d intersection;
+    Neighbor lowerNeighbor;
+    Neighbor upperNeighbor;
 
     public IntersectionEvent(SweepLine sweepLine, Vec2d intersection, Neighbor lower, Neighbor upper) {
-        super(sweepLine, intersection.x, upper, lower);
+        super(sweepLine, intersection.x);
         this.intersection = intersection;
-        // Secure, that the Neighbors are in the right order
-        if (lower.getYVal() > upper.getYVal()) {
-            Neighbor temp = this.getMyNeighbors().remove(0);
-            this.getMyNeighbors().add(temp);
-        }
+        this.lowerNeighbor = lower;
+        this.upperNeighbor = upper;
+
     }
 
     @Override
-    public void handle() {
-        Neighbor lower = this.getMyNeighbors().get(0);
-        Neighbor upper = this.getMyNeighbors().get(1);
-        if (this.getSweepLine().getNeighborhood().toggleNeighbors(lower, upper)) {
-            // lower now on top after toggling, thus check intersection with neighbor above
-            this.checkIntersection(lower, lower.getNeighborAbove());
-            // upper vice versa
-            this.checkIntersection(upper, upper.getNeighborBelow());
-
-            this.getSweepLine().getIntersections().add(new Intersection(intersection, this.getMyNeighbors()));
+    public boolean handle() {
+        Neighbor[][] relations = this.getSweepLine().getNeighborhood().toggleNeighbors(lowerNeighbor, upperNeighbor);
+        if(relations != null) {
+            this.getSweepLine().getIntersections().add(new Intersection(intersection, lowerNeighbor, upperNeighbor));
+            return checkNewRelations(relations);
         }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        IntersectionEvent that = (IntersectionEvent) o;
+
+        return lowerNeighbor == that.lowerNeighbor && upperNeighbor == that.upperNeighbor;
+    }
+
+    @Override
+    public String toString() {
+        return "IntersectionEvent at x="+getXVal()+": "+lowerNeighbor+" X "+upperNeighbor;
     }
 }

@@ -16,6 +16,7 @@ import java.util.Collections;
 public class MatlabValidation {
 
     public static final String FILE_BASE_PATH = "data"+File.separator+"matlabValidation"+File.separator;
+    public static final int MAX_PLOTS = 20;
 
     public static void generateMatlabIntersectionValidationScript(Collection<? extends Collection<LineSegment>> intersections, String scriptName, int plot, boolean terminateAtFail) {
         PrintWriter out;
@@ -41,8 +42,10 @@ public class MatlabValidation {
             return;
         }
         out.println(generateBase());
+        int counter = 0;
         for(Intersection intersection: intersections) {
-            out.println(generateScriptLine(intersection, plot, terminateAtFail));
+            out.println(generateScriptLine(intersection, counter < MAX_PLOTS ? plot : 0, terminateAtFail));
+            counter++;
         }
         out.close();
     }
@@ -51,7 +54,7 @@ public class MatlabValidation {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("import matlab.unittest.TestCase;").append(System.lineSeparator());
         stringBuilder.append("import matlab.unittest.constraints.AbsoluteTolerance;").append(System.lineSeparator());
-        stringBuilder.append("testCase = TestCase.forInteractiveUse;").append(System.lineSeparator());
+        stringBuilder.append("testcase = TestCase.forInteractiveUse;").append(System.lineSeparator());
         stringBuilder.append("tolerance = AbsoluteTolerance(10e-10);");
         return stringBuilder.toString();
     }

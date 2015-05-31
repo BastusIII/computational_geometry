@@ -5,11 +5,11 @@ import java.util.Comparator;
 /**
  * Created by Basti on 26.05.2015.
  */
-public interface Neighborhood extends Comparator<Neighbor> {
+public interface Neighborhood extends Comparator<Neighbor>, ErrorList {
 
-    boolean toggleNeighbors(Neighbor first, Neighbor second);
+    Neighbor[][] toggleNeighbors(Neighbor first, Neighbor second);
 
-    boolean addNeighbor(Neighbor newNeighbor);
+    Neighbor[][] addNeighbor(Neighbor newNeighbor, double xValue);
 
-    boolean removeNeighbor(Neighbor neighbor);
+    Neighbor[][] removeNeighbor(Neighbor neighbor);
 }

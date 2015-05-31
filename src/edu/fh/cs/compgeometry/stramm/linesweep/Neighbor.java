@@ -10,12 +10,4 @@ public interface Neighbor extends InterceptLineSegment {
     double getYVal();
 
     void updateYVal(double xVal);
-
-    Neighbor getNeighborAbove();
-
-    void setNeighborAbove(Neighbor neighborAbove);
-
-    Neighbor getNeighborBelow();
-
-    void setNeighborBelow(Neighbor neighborBelow);
 }

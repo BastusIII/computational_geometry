@@ -9,8 +9,6 @@ import edu.fh.cs.compgeometry.stramm.primitives.SlopeInterceptLineSegment;
  */
 public class SimpleNeighbor extends SlopeInterceptLineSegment implements Neighbor {
 
-    Neighbor neighborAbove = null;
-    Neighbor neighborBelow = null;
     private double yVal = Double.NaN;
     private double lastUpdateXVal = Double.NaN;
 
@@ -39,22 +37,7 @@ public class SimpleNeighbor extends SlopeInterceptLineSegment implements Neighbo
     }
 
     @Override
-    public Neighbor getNeighborAbove() {
-        return neighborAbove;
-    }
-
-    @Override
-    public void setNeighborAbove(Neighbor neighborAbove) {
-        this.neighborAbove = neighborAbove;
-    }
-
-    @Override
-    public Neighbor getNeighborBelow() {
-        return neighborBelow;
-    }
-
-    @Override
-    public void setNeighborBelow(Neighbor neighborBelow) {
-        this.neighborBelow = neighborBelow;
+    public String toString() {
+        return "y="+this.yVal+" | "+super.toString();
     }
 }

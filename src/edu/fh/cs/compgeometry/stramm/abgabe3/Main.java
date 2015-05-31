@@ -1,9 +1,6 @@
 package edu.fh.cs.compgeometry.stramm.abgabe3;
 
-import edu.fh.cs.compgeometry.stramm.linesweep.SimpleEventList;
-import edu.fh.cs.compgeometry.stramm.linesweep.SimpleNeighborhoodList;
-import edu.fh.cs.compgeometry.stramm.linesweep.SimpleSweepLine;
-import edu.fh.cs.compgeometry.stramm.linesweep.SweepLine;
+import edu.fh.cs.compgeometry.stramm.linesweep.*;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
@@ -74,7 +71,13 @@ public class Main {
         }
 
         if(VALIDATE) {
-            MatlabValidation.generateMatlabIntersectionPointValidationScript(sweepLine.getIntersections(), "validate_sweep_line", 1, true);
+            MatlabValidation.generateMatlabIntersectionPointValidationScript(sweepLine.getIntersections(), "validate_sweep_line_", 2, true);
+        }
+
+        if(!sweepLine.getNeighborhood().getErrors().isEmpty() || !sweepLine.getEventList().getErrors().isEmpty()) {
+            System.out.println("Errors occurred:");
+            System.out.println(sweepLine.getNeighborhood().getErrors());
+            System.out.println(sweepLine.getEventList().getErrors());
         }
     }
     /*

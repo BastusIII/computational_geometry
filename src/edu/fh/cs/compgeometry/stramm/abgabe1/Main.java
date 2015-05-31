@@ -29,9 +29,10 @@ public class Main {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
         //fileNames.add("s_1000_1.dat");
+        fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
-        fileNames.add("test.dat");
+        //fileNames.add("test2.dat");
 
         System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
         for (String fileName: fileNames) {
@@ -74,7 +75,7 @@ public class Main {
         }
 
         if(VALIDATE) {
-            MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 2, false);
+            MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 1, true);
         }
 
         System.out.println("Lines crossing in " + file.toString() + ": " + count);

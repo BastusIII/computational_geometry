@@ -12,68 +12,83 @@ public class SimpleNeighborhoodList extends AbstractNeighborhood {
     private List<Neighbor> neighborList = new ArrayList<>();
 
     @Override
-    public boolean toggleNeighbors(Neighbor first, Neighbor second) {
+    public Neighbor[][] toggleNeighbors(Neighbor first, Neighbor second) {
         int indexFirst = neighborList.indexOf(first);
         int indexSecond = neighborList.indexOf(second);
         // one or both of the lines have already ended
         if (indexFirst == -1 || indexSecond == -1) {
-            return false;
+            return null;
         }
-        // check if the order is alright
+
+        neighborList.remove(indexFirst);
+        neighborList.add(indexFirst, second);
+        neighborList.remove(indexSecond);
+        neighborList.add(indexSecond, first);
+
+        // check if the order was alright
         if (indexFirst > indexSecond) {
             int temp = indexFirst;
             indexFirst = indexSecond;
             indexSecond = temp;
         }
-        neighborList.remove(indexFirst);
-        neighborList.remove(indexSecond - 1);
-        neighborList.add(indexFirst, second);
-        neighborList.add(indexSecond, first);
 
-        Neighbor nowBelow = neighborList.get(indexFirst);
-        Neighbor nowAbove = neighborList.get(indexSecond);
+        Neighbor[][] newRelations = new Neighbor[2][2];
 
-        nowBelow.setNeighborBelow(nowAbove.getNeighborBelow());
-        nowAbove.setNeighborAbove(nowBelow.getNeighborAbove());
-        nowBelow.setNeighborAbove(nowAbove);
-        nowAbove.setNeighborBelow(nowBelow);
+        // not first element
+        if (indexFirst > 0) {
+            // second is now below
+            newRelations[0] = new Neighbor[]{neighborList.get(indexFirst-1), neighborList.get(indexFirst)};
+        }
+        if (indexSecond < neighborList.size() - 1) {
+            newRelations[1] = new Neighbor[]{neighborList.get(indexSecond), neighborList.get(indexSecond + 1)};
+        }
 
-        return true;
+        return newRelations;
     }
 
     @Override
-    public boolean addNeighbor(Neighbor neighbor) {
+    public Neighbor[][] addNeighbor(Neighbor neighbor, double xValue) {
         neighborList.add(neighbor);
+        // TODO: update only necessary neighbors
+        for (Neighbor n : neighborList) {
+            n.updateYVal(xValue);
+        }
         Collections.sort(neighborList, this);
         int index = neighborList.indexOf(neighbor);
+
+        Neighbor[][] newRelations = new Neighbor[2][2];
+        Neighbor[] invalidNeighbors = new Neighbor[2];
         if (index > 0) {
-            if (neighbor.getYVal() < neighborList.get(index - 1).getYVal()) {
-                throw new RuntimeException("The Neighbors are sorted wrong.");
+            newRelations[0] = new Neighbor[]{neighbor, neighborList.get(index - 1)};
+            if (neighbor.getYVal() == neighborList.get(index - 1).getYVal()) {
+                invalidNeighbors[0] = neighborList.get(index - 1);
             }
-            neighbor.setNeighborBelow(neighborList.get(index - 1));
-            neighborList.get(index - 1).setNeighborAbove(neighbor);
         }
         if (index < neighborList.size() - 1) {
-            if (neighbor.getYVal() > neighborList.get(index + 1).getYVal()) {
-                throw new RuntimeException("The neighbors are sorted wrong.");
+            newRelations[1] = new Neighbor[]{neighbor, neighborList.get(index + 1)};
+            if (neighbor.getYVal() == neighborList.get(index + 1).getYVal()) {
+                invalidNeighbors[1] = neighborList.get(index + 1);
             }
-            neighbor.setNeighborAbove(neighborList.get(index + 1));
-            neighborList.get(index + 1).setNeighborBelow(neighbor);
         }
-        return true;
+        for (Neighbor invalidNeighbor : invalidNeighbors) {
+            if(invalidNeighbor != null) {
+                this.addError("Invalid data. Line " + neighbor + " starts with the same y-value as its neighbor " + invalidNeighbor + " at the current sweep line position.");
+            }
+        }
+        return newRelations;
     }
 
+
+
     @Override
-    public boolean removeNeighbor(Neighbor neighbor) {
-        Neighbor above = neighbor.getNeighborAbove();
-        Neighbor below = neighbor.getNeighborBelow();
-        if (above != null) {
-            above.setNeighborBelow(below);
-        }
-        if (below != null) {
-            below.setNeighborAbove(below);
+    public Neighbor[][] removeNeighbor(Neighbor neighbor) {
+        int index = neighborList.indexOf(neighbor);
+        Neighbor[][] newRelations = new Neighbor[1][2];
+
+        if (index > 0 && index < neighborList.size() - 1) {
+            newRelations[0] = new Neighbor[] {neighborList.get(index - 1), neighborList.get(index + 1)};
         }
         neighborList.remove(neighbor);
-        return true;
+        return newRelations;
     }
 }

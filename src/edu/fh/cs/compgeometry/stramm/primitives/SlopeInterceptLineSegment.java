@@ -22,7 +22,7 @@ public class SlopeInterceptLineSegment extends SimpleLineSegment implements Inte
         if (yDiff == 0.0) {
             return 0.0;
         }
-        return xDiff / yDiff;
+        return yDiff / xDiff;
     }
 
     private double calcYAxisIntercept() {
