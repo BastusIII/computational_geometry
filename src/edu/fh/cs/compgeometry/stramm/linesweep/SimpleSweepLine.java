@@ -3,6 +3,7 @@ package edu.fh.cs.compgeometry.stramm.linesweep;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -15,7 +16,7 @@ public class SimpleSweepLine implements SweepLine {
 
     private final EventList eventList;
 
-    private final Collection<Intersection> intersections = new HashSet<>();
+    private final Collection<Intersection> intersections = new ArrayList<>();
 
     public SimpleSweepLine(final EventList eventList, final Neighborhood neighborhood, final Collection<LineSegment> lineSegments) {
         this.eventList = eventList;
@@ -56,7 +57,8 @@ public class SimpleSweepLine implements SweepLine {
     }
 
     private void insertEvents(final LineSegment lineSegment) {
-        eventList.addEvent(new StartPointEvent(this, Math.min(lineSegment.getPoint1().x, lineSegment.getPoint2().x)));
-        eventList.addEvent(new EndPointEvent(this, Math.max(lineSegment.getPoint1().x, lineSegment.getPoint2().x)));
+        Neighbor neighbor = new SimpleNeighbor(lineSegment);
+        eventList.addEvent(new StartPointEvent(this, Math.min(lineSegment.getPoint1().x, lineSegment.getPoint2().x), neighbor));
+        eventList.addEvent(new EndPointEvent(this, Math.max(lineSegment.getPoint1().x, lineSegment.getPoint2().x), neighbor));
     }
 }

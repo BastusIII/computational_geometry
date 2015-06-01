@@ -17,11 +17,8 @@ import java.util.Map;
 public class SVGLineParser {
 
     private final String d;
-
-    private int currentPosition;
-
     private final Map<Character, PathCMD> symbolMap;
-
+    private int currentPosition;
     private Vec2d M;
 
     private Vec2d lastPoint;
@@ -39,29 +36,8 @@ public class SVGLineParser {
     }
 
     /**
-     * SVG path commands.
-     */
-    private enum PathCMD {
-        MOVETO_ABS('M'),
-        MOVETO_REL('m'),
-        LINETO_ABS('L'),
-        LINETO_REL('l'),
-        VERTICALTO_ABS('V'),
-        VERTICALTO_REL('v'),
-        HORIZONTALTO_ABS('H'),
-        HORIZONTlTO_REL('h'),
-        CLOSEPATH_ABS('Z'),
-        CLOSEPATH_REL('z');
-
-        private char symbol;
-
-        PathCMD(char symbol) {
-            this.symbol = symbol;
-        }
-    }
-
-    /**
      * Parse d-element. Fixes rotation of inner polygons.
+     *
      * @return The parsed polygon.
      * @throws ParserException If polygons are not valid for area calculations.
      */
@@ -202,5 +178,27 @@ public class SVGLineParser {
 
     private Vec2d addVecs(Vec2d one, Vec2d two) {
         return new Vec2d(one.x + two.x, one.y + two.y);
+    }
+
+    /**
+     * SVG path commands.
+     */
+    private enum PathCMD {
+        MOVETO_ABS('M'),
+        MOVETO_REL('m'),
+        LINETO_ABS('L'),
+        LINETO_REL('l'),
+        VERTICALTO_ABS('V'),
+        VERTICALTO_REL('v'),
+        HORIZONTALTO_ABS('H'),
+        HORIZONTlTO_REL('h'),
+        CLOSEPATH_ABS('Z'),
+        CLOSEPATH_REL('z');
+
+        private char symbol;
+
+        PathCMD(char symbol) {
+            this.symbol = symbol;
+        }
     }
 }

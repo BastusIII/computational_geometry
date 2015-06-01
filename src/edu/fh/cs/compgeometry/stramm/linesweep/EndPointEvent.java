@@ -5,12 +5,30 @@ package edu.fh.cs.compgeometry.stramm.linesweep;
  */
 public class EndPointEvent extends AbstractEvent {
 
-    protected EndPointEvent(SweepLine sweepLine, double xValue) {
+    Neighbor myNeighbor;
+
+    public EndPointEvent(SweepLine sweepLine, double xValue, Neighbor neighbor) {
         super(sweepLine, xValue);
+        this.myNeighbor = neighbor;
     }
 
     @Override
-    public void handle() {
-        // TODO: implement
+    public boolean handle() {
+        Neighbor[][] relations = this.getSweepLine().getNeighborhood().removeNeighbor(myNeighbor);
+        return checkNewRelations(relations);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EndPointEvent that = (EndPointEvent) o;
+        return myNeighbor == that.myNeighbor;
+
+    }
+
+    @Override
+    public String toString() {
+        return "EndPointEvent at x="+getXVal()+": "+myNeighbor;
     }
 }

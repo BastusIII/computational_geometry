@@ -24,17 +24,16 @@ public class LineSegmentParser {
         final Collection<LineSegment> lineSegments = new HashSet<>();
 
         try {
-            if(sanitize) {
+            if (sanitize) {
                 while (reader.ready()) {
                     LineSegment currentSegment = readLine(reader.readLine());
                     // Same x value of line points, thus either vertical or equal points. Both is invalid
-                    if(currentSegment.getPoint1().x == currentSegment.getPoint2().x) {
+                    if (currentSegment.getPoint1().x == currentSegment.getPoint2().x) {
                         continue;
                     }
-                    lineSegments.add(readLine(reader.readLine()));
+                    lineSegments.add(currentSegment);
                 }
-            }
-            else {
+            } else {
                 while (reader.ready()) {
                     lineSegments.add(readLine(reader.readLine()));
                 }

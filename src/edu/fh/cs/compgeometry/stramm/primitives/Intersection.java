@@ -2,6 +2,7 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 
 import com.sun.javafx.geom.Vec2d;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -10,19 +11,19 @@ import java.util.Collection;
 public class Intersection {
 
     private Vec2d intersectionPoint;
-    private Collection<LineSegment> lines;
+    LineSegment[] lines;
 
-    public Intersection(Vec2d intersectionPoint, Collection<LineSegment> lines) {
+    public Intersection(Vec2d intersectionPoint, LineSegment... lines) {
         this.intersectionPoint = intersectionPoint;
         this.lines = lines;
     }
 
-    public Collection<LineSegment> getLines() {
+    public Collection<? extends LineSegment> getLines() {
 
-        return lines;
+        return Arrays.asList(lines);
     }
 
-    public void setLines(Collection<LineSegment> lines) {
+    public void setLines(LineSegment... lines) {
         this.lines = lines;
     }
 
@@ -33,5 +34,18 @@ public class Intersection {
 
     public void setIntersectionPoint(Vec2d intersectionPoint) {
         this.intersectionPoint = intersectionPoint;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuffer = new StringBuilder();
+        for (LineSegment lineSegment : this.getLines()) {
+            stringBuffer.append(lineSegment);
+            stringBuffer.append(" X ");
+        }
+        stringBuffer.delete(stringBuffer.length() - 3, stringBuffer.length());
+        stringBuffer.append(" at ");
+        stringBuffer.append(this.getIntersectionPoint());
+        return stringBuffer.toString();
     }
 }
