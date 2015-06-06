@@ -111,7 +111,10 @@ public class LinearNeighborhoodList extends BaseErrorList implements Neighborhoo
         int index;
         for (index = 0; index < neighborList.size(); index++) {
             neighborList.get(index).updateYVal(Math.min(neighbor.getPoint1().x, neighbor.getPoint2().x));
-            if (this.compare(neighborList.get(index), neighbor) > 0) {
+            int compare = this.compare(neighborList.get(index), neighbor);
+            if (compare == 0) {
+                this.addError("WARNING: EventList: Occurrence of neighbors with the same y value: " + neighborList.get(index) + " and " + neighbor);
+            } else if (compare > 0) {
                 neighborList.add(index, neighbor);
                 break;
             }

@@ -4,6 +4,7 @@ import com.sun.javafx.geom.Vec2d;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Basti on 21.05.2015.
@@ -18,7 +19,7 @@ public class Intersection {
         this.lines = lines;
     }
 
-    public Collection<? extends LineSegment> getLines() {
+    public List<? extends LineSegment> getLines() {
 
         return Arrays.asList(lines);
     }

@@ -87,7 +87,7 @@ public class Main {
             System.out.println("Duplicated intersections:");
             while(!sweepLine.getIntersections().isEmpty()) {
                 Intersection intersection = sweepLine.getIntersections().remove(0);
-                if(sweepLine.getIntersections().contains(intersection)) {
+                if(sweepLine.getIntersections().contains(intersection) || sweepLine.getIntersections().contains(new Intersection(intersection.getIntersectionPoint(), intersection.getLines().get(1), intersection.getLines().get(0)))) {
                     System.out.println("Duplicate intersection: " + intersection);
                 }
             }
