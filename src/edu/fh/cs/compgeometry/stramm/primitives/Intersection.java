@@ -10,8 +10,8 @@ import java.util.Collection;
  */
 public class Intersection {
 
-    private Vec2d intersectionPoint;
     LineSegment[] lines;
+    private Vec2d intersectionPoint;
 
     public Intersection(Vec2d intersectionPoint, LineSegment... lines) {
         this.intersectionPoint = intersectionPoint;
@@ -47,5 +47,25 @@ public class Intersection {
         stringBuffer.append(" at ");
         stringBuffer.append(this.getIntersectionPoint());
         return stringBuffer.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Intersection that = (Intersection) o;
+
+        if (intersectionPoint != null ? !intersectionPoint.equals(that.intersectionPoint) : that.intersectionPoint != null)
+            return false;
+        return Arrays.equals(lines, that.lines);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = intersectionPoint != null ? intersectionPoint.hashCode() : 0;
+        result = 31 * result + (lines != null ? Arrays.hashCode(lines) : 0);
+        return result;
     }
 }

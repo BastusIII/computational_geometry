@@ -1,16 +1,19 @@
 package edu.fh.cs.compgeometry.stramm.linesweep;
 
 import com.sun.javafx.geom.Vec2d;
+import edu.fh.cs.compgeometry.stramm.linesweep.baseclasses.BaseEvent;
+import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Neighbor;
+import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 
 /**
  * Created by Basti on 21.05.2015.
  */
-public class IntersectionEvent extends AbstractEvent {
+public class IntersectionEvent extends BaseEvent {
 
-    private Vec2d intersection;
     Neighbor lowerNeighbor;
     Neighbor upperNeighbor;
+    private Vec2d intersection;
 
     public IntersectionEvent(SweepLine sweepLine, Vec2d intersection, Neighbor lower, Neighbor upper) {
         super(sweepLine, intersection.x);
@@ -21,13 +24,16 @@ public class IntersectionEvent extends AbstractEvent {
     }
 
     @Override
-    public boolean handle() {
-        Neighbor[][] relations = this.getSweepLine().getNeighborhood().toggleNeighbors(lowerNeighbor, upperNeighbor);
-        if(relations != null) {
+    public void handle() {
+        // did the intersection occur or has one line already ended?
+        if (this.getSweepLine().getNeighborhood().toggleNeighbors(lowerNeighbor, upperNeighbor)) {
             this.getSweepLine().getIntersections().add(new Intersection(intersection, lowerNeighbor, upperNeighbor));
-            return checkNewRelations(relations);
         }
-        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "IntersectionEvent at x=" + getXVal() + ", " + lowerNeighbor + " X " + upperNeighbor + " at (" + intersection.x + "," + intersection.y + ")";
     }
 
     @Override
@@ -37,11 +43,8 @@ public class IntersectionEvent extends AbstractEvent {
 
         IntersectionEvent that = (IntersectionEvent) o;
 
-        return lowerNeighbor == that.lowerNeighbor && upperNeighbor == that.upperNeighbor;
-    }
-
-    @Override
-    public String toString() {
-        return "IntersectionEvent at x="+getXVal()+": "+lowerNeighbor+" X "+upperNeighbor;
+        if (lowerNeighbor != null ? !lowerNeighbor.equals(that.lowerNeighbor) : that.lowerNeighbor != null)
+            return false;
+        return !(upperNeighbor != null ? !upperNeighbor.equals(that.upperNeighbor) : that.upperNeighbor != null);
     }
 }

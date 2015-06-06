@@ -7,16 +7,16 @@ import edu.fh.cs.compgeometry.stramm.primitives.SlopeInterceptLineSegment;
 /**
  * Created by Basti on 26.05.2015.
  */
-public class SimpleNeighbor extends SlopeInterceptLineSegment implements Neighbor {
+public class NeighborLineSegment extends SlopeInterceptLineSegment implements edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Neighbor {
 
     private double yVal = Double.NaN;
     private double lastUpdateXVal = Double.NaN;
 
-    public SimpleNeighbor(final LineSegment lineSegment) {
+    public NeighborLineSegment(final LineSegment lineSegment) {
         this(lineSegment.getPoint1(), lineSegment.getPoint2());
     }
 
-    public SimpleNeighbor(final Vec2d point1, final Vec2d point2) {
+    public NeighborLineSegment(final Vec2d point1, final Vec2d point2) {
         super(point1, point2);
     }
 
@@ -31,13 +31,26 @@ public class SimpleNeighbor extends SlopeInterceptLineSegment implements Neighbo
         if (this.lastUpdateXVal == xVal) {
             return;
         }
+        // xVal lies on one of the endpoints of the line
+        else if (this.getPoint1().x == xVal) {
+            this.yVal = this.getPoint1().y;
+        } else if (this.getPoint2().x == xVal) {
+            this.yVal = this.getPoint2().y;
+        }
         // calculate the intersection between the horizontal line x=xVal and the line segment.
-        this.yVal = this.getSlope() * xVal + this.getIntercept();
-        this.lastUpdateXVal = xVal;
+        else {
+            this.yVal = this.getSlope() * xVal + this.getIntercept();
+            this.lastUpdateXVal = xVal;
+        }
+    }
+
+    @Override
+    public void initYVal() {
+        this.yVal = this.getPoint1().x < this.getPoint2().x ? this.getPoint1().y : this.getPoint2().y;
     }
 
     @Override
     public String toString() {
-        return "y="+this.yVal+" | "+super.toString();
+        return super.toString() + ", current y=" + this.yVal;
     }
 }

@@ -1,4 +1,4 @@
-package edu.fh.cs.compgeometry.stramm.linesweep;
+package edu.fh.cs.compgeometry.stramm.linesweep.interfaces;
 
 /**
  * Created by Basti on 31.05.2015.
