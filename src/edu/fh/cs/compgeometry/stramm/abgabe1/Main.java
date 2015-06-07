@@ -29,7 +29,8 @@ public class Main {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
         //fileNames.add("s_1000_1.dat");
-        fileNames.add("s_1000_10.dat");
+        fileNames.add("s_1000_1_sanitized.dat");
+        //fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
         //fileNames.add("test2.dat");
@@ -43,7 +44,7 @@ public class Main {
 
     private static void crossLinesFromFile(final File file) {
         LineSegmentParser parser = new LineSegmentParser();
-        Collection<LineSegment> lineSegments = null;
+        Collection<LineSegment> lineSegments;
         try {
             lineSegments = parser.readLineSegments(file);
         } catch (FileNotFoundException e) {
@@ -75,7 +76,7 @@ public class Main {
         }
 
         if(VALIDATE) {
-            MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 1, true);
+            MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 2, true);
         }
 
         System.out.println("Lines crossing in " + file.toString() + ": " + count);

@@ -25,8 +25,8 @@ public class Main {
     public static void main(String[] args) {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
-        //fileNames.add("s_1000_1.dat");
-        fileNames.add("s_1000_10.dat");
+        fileNames.add("s_1000_1.dat");
+        //fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
         //fileNames.add("test2.dat");
@@ -40,7 +40,7 @@ public class Main {
         LineSegmentParser parser = new LineSegmentParser();
         Collection<LineSegment> lineSegments;
         try {
-            lineSegments = parser.readLineSegments(file, false);
+            lineSegments = parser.readLineSegments(file, true);
         } catch (FileNotFoundException e) {
             System.out.println(e.getLocalizedMessage());
             return;
@@ -94,20 +94,22 @@ public class Main {
         }
     }
     /*
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_1000_1.dat: 4
-    Time taken: 0.265
+All cleaned for Segments having the same x-value for both points
 
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_10000_1.dat: 733
-    Time taken: 4.14
+Threshold: 1.0E-14
+Lines crossing in .\data\s_1000_1.dat: 4
+Time taken: 0.264
 
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_100000_1.dat: 78958
-    Time taken: 361.602
+Threshold: 1.0E-14
+Lines crossing in .\data\s_10000_1.dat: 725
+Time taken: 4.084
 
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_1000_10.dat: 797
-    Time taken: 0.295
+Threshold: 1.0E-14
+Lines crossing in .\data\s_100000_1.dat: 77105
+Time taken: 350.859
+
+Threshold: 1.0E-14
+Lines crossing in .\data\s_1000_10.dat: 796
+Time taken: 0.277
     */
 }

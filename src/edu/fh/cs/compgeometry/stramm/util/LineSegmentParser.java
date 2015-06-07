@@ -25,14 +25,28 @@ public class LineSegmentParser {
 
         try {
             if (sanitize) {
+                String filename = file.getName();
+                String extension = "";
+                int i = filename.lastIndexOf('.');
+                if (i > 0) {
+                    extension = filename.substring(i+1);
+                    filename = filename.substring(0,i);
+                }
+                final File writeToFile = new File(file.getParent()+System.getProperty("file.separator")+filename+"_sanitized."+extension);
+                final BufferedWriter writer = new BufferedWriter(new FileWriter(writeToFile));
                 while (reader.ready()) {
-                    LineSegment currentSegment = readLine(reader.readLine());
+                    String line = reader.readLine();
+                    LineSegment currentSegment = readLine(line);
                     // Same x value of line points, thus either vertical or equal points. Both is invalid
                     if (currentSegment.getPoint1().x == currentSegment.getPoint2().x) {
                         continue;
                     }
                     lineSegments.add(currentSegment);
+                    writer.write(line);
+                    writer.newLine();
                 }
+                writer.flush();
+                writer.close();
             } else {
                 while (reader.ready()) {
                     lineSegments.add(readLine(reader.readLine()));
