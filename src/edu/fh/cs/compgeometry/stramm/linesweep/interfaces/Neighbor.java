@@ -1,4 +1,4 @@
-package edu.fh.cs.compgeometry.stramm.linesweep;
+package edu.fh.cs.compgeometry.stramm.linesweep.interfaces;
 
 import edu.fh.cs.compgeometry.stramm.primitives.InterceptLineSegment;
 
@@ -10,4 +10,6 @@ public interface Neighbor extends InterceptLineSegment {
     double getYVal();
 
     void updateYVal(double xVal);
+
+    void initYVal();
 }

@@ -87,4 +87,16 @@ public class SimpleLineSegment implements LineSegment {
     public String toString() {
         return point1.x + ":" + point1.y + "->" + point2.x + ":" + point2.y;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleLineSegment that = (SimpleLineSegment) o;
+
+        if (point1 != null ? !point1.equals(that.point1) : that.point1 != null) return false;
+        return !(point2 != null ? !point2.equals(that.point2) : that.point2 != null);
+
+    }
 }

@@ -1,6 +1,7 @@
 package edu.fh.cs.compgeometry.stramm.abgabe3;
 
 import edu.fh.cs.compgeometry.stramm.linesweep.*;
+import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SimpleLineSegment;
@@ -24,8 +25,8 @@ public class Main {
     public static void main(String[] args) {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
-        //fileNames.add("s_1000_1.dat");
-        fileNames.add("s_1000_10.dat");
+        fileNames.add("s_1000_1.dat");
+        //fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
         //fileNames.add("test2.dat");
@@ -47,7 +48,7 @@ public class Main {
 
         long millis = System.currentTimeMillis();
 
-        SweepLine sweepLine = new SimpleSweepLine(new SimpleEventList(), new SimpleNeighborhoodList(), lineSegments);
+        SweepLine sweepLine = new LinearSweepLine(lineSegments);
 
         while (!sweepLine.finished()) {
             sweepLine.proceed();
@@ -72,25 +73,43 @@ public class Main {
 
         if(VALIDATE) {
             MatlabValidation.generateMatlabIntersectionPointValidationScript(sweepLine.getIntersections(), "validate_sweep_line_", 2, true);
-        }
-
-        if(!sweepLine.getNeighborhood().getErrors().isEmpty() || !sweepLine.getEventList().getErrors().isEmpty()) {
-            System.out.println("Errors occurred:");
-            System.out.println(sweepLine.getNeighborhood().getErrors());
-            System.out.println(sweepLine.getEventList().getErrors());
+            System.out.println("Errors:");
+            System.out.println();
+            System.out.println("Problematic x values:");
+            if(!sweepLine.getEventList().getErrors().isEmpty()) {
+                System.out.println(sweepLine.getEventList().getErrors());
+            }
+            System.out.println("Problematic y values:");
+            if(!sweepLine.getNeighborhood().getErrors().isEmpty()) {
+                System.out.println(sweepLine.getNeighborhood().getErrors());
+            }
+            System.out.println();
+            System.out.println("Duplicated intersections:");
+            while(!sweepLine.getIntersections().isEmpty()) {
+                Intersection intersection = sweepLine.getIntersections().remove(0);
+                if(sweepLine.getIntersections().contains(intersection) || sweepLine.getIntersections().contains(new Intersection(intersection.getIntersectionPoint(), intersection.getLines().get(1), intersection.getLines().get(0)))) {
+                    System.out.println("Duplicate intersection: " + intersection);
+                }
+            }
         }
     }
     /*
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_1000_1.dat: 17
-    Time taken: 0.156
+All cleaned for Segments having the same x-value for both points
 
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_10000_1.dat: 196
-    Time taken: 7.4
+Threshold: 1.0E-14
+Lines crossing in .\data\s_1000_1.dat: 4
+Time taken: 0.264
 
-    Threshold: 1.0E-14
-    Lines crossing in .\data\s_100000_1.dat: 8665
-    Time taken: 919.555
+Threshold: 1.0E-14
+Lines crossing in .\data\s_10000_1.dat: 725
+Time taken: 4.084
+
+Threshold: 1.0E-14
+Lines crossing in .\data\s_100000_1.dat: 77105
+Time taken: 350.859
+
+Threshold: 1.0E-14
+Lines crossing in .\data\s_1000_10.dat: 796
+Time taken: 0.277
     */
 }
