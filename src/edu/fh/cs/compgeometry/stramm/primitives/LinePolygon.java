@@ -7,14 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by femy on 5/9/15.
+ * Implementation of a polygon, based on {@link LineSegment}s.
  */
 public class LinePolygon implements Polygon {
 
     private enum CrossingType {
-        GOING_IN,
-        GOING_OUT,
-        NOT_CROSSING;
+        GOING_IN(1),
+        GOING_OUT(-1),
+        NOT_CROSSING(0);
+
+        int countValue;
+
+        CrossingType(int countValue){
+           this.countValue = countValue;
+        }
+
+        public int getCountValue() { return countValue; }
     }
 
     private final List<LineSegment> lineSegments;
@@ -22,7 +30,6 @@ public class LinePolygon implements Polygon {
     public LinePolygon(List<LineSegment> lineSegments) {
         this.lineSegments = lineSegments;
     }
-
 
     @Override
     public List<LineSegment> getLines() {
@@ -50,8 +57,6 @@ public class LinePolygon implements Polygon {
         Vec2d pointOutside = getPointOutside();
         LineSegment testLine = new SimpleLineSegment(pointOutside, point);
         int timesWentInside = 0;
-
-        CrossingType lastTest = CrossingType.NOT_CROSSING;
         LineSegment firstLineOfSubPolygon = this.getLine(0);
 
         // Check intersects for all lines.
@@ -74,20 +79,9 @@ public class LinePolygon implements Polygon {
                 // The corner of the current and next line has been crossed.
                 // Do nothing, intersect is counted in next test.
             } else {
-                switch (currentTest) {
-                    case GOING_IN:
-                        timesWentInside++;
-                        break;
-                    case GOING_OUT:
-                        timesWentInside--;
-                        break;
-                    default:
-                        // Nothing to count.
-                }
+                timesWentInside += currentTest.getCountValue();
             }
-
         }
-
 
         if (timesWentInside < 0 || timesWentInside > 1) {
             throw new RuntimeException("Point inside test failed. Counted " + timesWentInside + "going ins.");

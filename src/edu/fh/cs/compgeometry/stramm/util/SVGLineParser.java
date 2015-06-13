@@ -17,8 +17,11 @@ import java.util.Map;
 public class SVGLineParser {
 
     private final String d;
-    private final Map<Character, PathCMD> symbolMap;
+
+    private final Map<Character, Runnable> commandMap;
+
     private int currentPosition;
+
     private Vec2d M;
 
     private Vec2d lastPoint;
@@ -29,10 +32,25 @@ public class SVGLineParser {
 
     public SVGLineParser(final String d) {
         this.d = d;
-        symbolMap = new HashMap<>();
-        for (PathCMD command : PathCMD.values()) {
-            symbolMap.put(command.symbol, command);
-        }
+        commandMap = new HashMap<>();
+        initializeCommandMap();
+    }
+
+    private void initializeCommandMap() {
+        commandMap.put(PathCMD.MOVETO_ABS.symbol, this::setMoveToAbs);
+        commandMap.put(PathCMD.MOVETO_REL.symbol, this::setMoveToRel);
+        commandMap.put(PathCMD.LINETO_ABS.symbol, this::addLineToAbs);
+        commandMap.put(PathCMD.LINETO_REL.symbol, this::addLineToRel);
+        commandMap.put(PathCMD.HORIZONTALTO_ABS.symbol, this::addHorizontalToAbs);
+        commandMap.put(PathCMD.HORIZONTlTO_REL.symbol, this::addHorizontalToRel);
+        commandMap.put(PathCMD.VERTICALTO_ABS.symbol, () -> {
+            throw new RuntimeException("Vertical lines not implemented.");
+        });
+        commandMap.put(PathCMD.VERTICALTO_REL.symbol, () -> {
+            throw new RuntimeException("Vertical lines not implemented.");
+        });
+        commandMap.put(PathCMD.CLOSEPATH_ABS.symbol, this::closePathAbs);
+        commandMap.put(PathCMD.CLOSEPATH_REL.symbol, this::closePathRel);
     }
 
     /**
@@ -43,36 +61,9 @@ public class SVGLineParser {
      */
     public Polygon parseLines() throws ParserException {
         while (currentPosition < d.length()) {
-            if (symbolMap.containsKey(d.charAt(currentPosition))) {
-                PathCMD command = symbolMap.get(d.charAt(currentPosition));
-                switch (command) {
-                    case MOVETO_ABS:
-                        setMoveToAbs();
-                        break;
-                    case MOVETO_REL:
-                        setMoveToRel();
-                        break;
-                    case LINETO_ABS:
-                        addLineToAbs();
-                        break;
-                    case LINETO_REL:
-                        addLineToRel();
-                        break;
-                    case HORIZONTALTO_ABS:
-                        addHorizontalToAbs();
-                        break;
-                    case HORIZONTlTO_REL:
-                        addHorizontalToRel();
-                        break;
-                    case CLOSEPATH_ABS:
-                        closePathAbs();
-                        break;
-                    case CLOSEPATH_REL:
-                        closePathRel();
-                        break;
-                    default:
-                        throw new RuntimeException("GG");
-                }
+            if (commandMap.containsKey(d.charAt(currentPosition))) {
+                commandMap.get(d.charAt(currentPosition)).run();
+
             } else {
                 currentPosition++;
             }
@@ -200,5 +191,6 @@ public class SVGLineParser {
         PathCMD(char symbol) {
             this.symbol = symbol;
         }
+
     }
 }
