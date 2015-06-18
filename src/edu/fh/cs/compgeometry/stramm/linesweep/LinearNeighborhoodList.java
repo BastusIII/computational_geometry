@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Basti on 26.05.2015.
+ * A linear implementation of the neighborhood list.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class LinearNeighborhoodList extends BaseErrorList implements Neighborhood {
 
+    // List containing rhe neighbored line segments
     private List<Neighbor> neighborList;
-
+    // Instance of sweep line to access the event list.
     private SweepLine sweepLine;
 
     public LinearNeighborhoodList(SweepLine sweepLine) {

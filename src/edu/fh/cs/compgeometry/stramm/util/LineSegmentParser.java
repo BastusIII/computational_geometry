@@ -29,10 +29,10 @@ public class LineSegmentParser {
                 String extension = "";
                 int i = filename.lastIndexOf('.');
                 if (i > 0) {
-                    extension = filename.substring(i+1);
-                    filename = filename.substring(0,i);
+                    extension = filename.substring(i + 1);
+                    filename = filename.substring(0, i);
                 }
-                final File writeToFile = new File(file.getParent()+System.getProperty("file.separator")+filename+"_sanitized."+extension);
+                final File writeToFile = new File(file.getParent() + System.getProperty("file.separator") + filename + "_sanitized." + extension);
                 final BufferedWriter writer = new BufferedWriter(new FileWriter(writeToFile));
                 while (reader.ready()) {
                     String line = reader.readLine();

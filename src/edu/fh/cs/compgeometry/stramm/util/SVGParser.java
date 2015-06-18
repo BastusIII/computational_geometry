@@ -27,6 +27,7 @@ public class SVGParser {
 
     /**
      * Extracts all polygons and points from a given SVG-File.
+     *
      * @param file The SVG-File.
      * @throws ParserException File not found.
      */
@@ -47,6 +48,7 @@ public class SVGParser {
 
     /**
      * Converts a path element to polygon or point.
+     *
      * @param path The path-element as String.
      * @throws ParserException For non-valid paths.
      */

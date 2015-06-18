@@ -11,20 +11,6 @@ import java.util.List;
  */
 public class LinePolygon implements Polygon {
 
-    private enum CrossingType {
-        GOING_IN(1),
-        GOING_OUT(-1),
-        NOT_CROSSING(0);
-
-        int countValue;
-
-        CrossingType(int countValue){
-           this.countValue = countValue;
-        }
-
-        public int getCountValue() { return countValue; }
-    }
-
     private final List<LineSegment> lineSegments;
 
     public LinePolygon(List<LineSegment> lineSegments) {
@@ -177,5 +163,21 @@ public class LinePolygon implements Polygon {
         }
 
         return new Vec2d(minX, minY);
+    }
+
+    private enum CrossingType {
+        GOING_IN(1),
+        GOING_OUT(-1),
+        NOT_CROSSING(0);
+
+        int countValue;
+
+        CrossingType(int countValue) {
+            this.countValue = countValue;
+        }
+
+        public int getCountValue() {
+            return countValue;
+        }
     }
 }

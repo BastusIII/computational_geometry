@@ -3,7 +3,9 @@ package edu.fh.cs.compgeometry.stramm.linesweep.baseclasses;
 import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.ErrorList;
 
 /**
- * Created by Basti on 26.05.2015.
+ * Base class for error list.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public abstract class BaseErrorList implements ErrorList {
 

@@ -95,7 +95,7 @@ public class SimpleLineSegmentTest extends TestCase {
 
 
     private void assertCCW(LineSegment lineSegment, Vec2d point, double ccw) {
-        assertEquals(lineSegment.toString() + " ccw with " + point.toString() + "should be " +ccw +"."
+        assertEquals(lineSegment.toString() + " ccw with " + point.toString() + "should be " + ccw + "."
                 , ccw, Math.signum(lineSegment.ccw(point)));
     }
 }

@@ -4,7 +4,9 @@ import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Event;
 import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 
 /**
- * Created by Basti on 21.05.2015.
+ * Base class for events.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public abstract class BaseEvent implements Event {
 

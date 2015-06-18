@@ -5,10 +5,12 @@ import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Neighbor;
 import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 
 /**
- * Created by Basti on 21.05.2015.
+ * The start point event.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class StartPointEvent extends BaseEvent {
-
+    // the corresponding neighbor
     private Neighbor neighbor;
 
     public StartPointEvent(SweepLine sweepLine, double xValue, Neighbor neighbor) {

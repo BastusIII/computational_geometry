@@ -1,9 +1,9 @@
 package edu.fh.cs.compgeometry.stramm.nameds;
 
 import com.sun.javafx.geom.Vec2d;
+import edu.fh.cs.compgeometry.stramm.primitives.LinePolygon;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.Polygon;
-import edu.fh.cs.compgeometry.stramm.primitives.LinePolygon;
 
 import java.util.List;
 

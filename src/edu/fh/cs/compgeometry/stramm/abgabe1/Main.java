@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class Main {
 
-    private static final boolean VALIDATE = true;
+    private static final boolean VALIDATE = false;
     private static final boolean DEBUG = false;
 
     public static void main(String[] args) {
@@ -29,14 +29,12 @@ public class Main {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
         //fileNames.add("s_1000_1.dat");
-        fileNames.add("s_1000_1_sanitized.dat");
-        //fileNames.add("s_1000_10.dat");
+        fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
-        //fileNames.add("test2.dat");
 
         System.out.println("Threshold: " + SimpleLineSegment.THRESHOLD);
-        for (String fileName: fileNames) {
+        for (String fileName : fileNames) {
             crossLinesFromFile(new File(pathToData + fileName));
         }
 
@@ -58,24 +56,24 @@ public class Main {
         long millis = System.currentTimeMillis();
         int count = 0;
 
-        for (int i = 0; i < lineList.size(); i++) {
+        for (int i = 0; i < lineList.size() - 1; i++) {
             for (int j = i + 1; j < lineList.size(); j++) {
-                if(lineList.get(i).isCrossing(lineList.get(j))) {
+                if (lineList.get(i).isCrossing(lineList.get(j))) {
                     count++;
                     intersections.add(new ArrayList<>(Arrays.asList(lineList.get(i), lineList.get(j))));
                 }
             }
         }
 
-        double timeTaken = (double)(System.currentTimeMillis() - millis) / 1000;
+        double timeTaken = (double) (System.currentTimeMillis() - millis) / 1000;
 
-        if(DEBUG) {
-            for(List<LineSegment> intersection: intersections) {
-                System.out.println(lineList.get(0) + " X " + lineList.get(1));
+        if (DEBUG) {
+            for (List<LineSegment> intersection : intersections) {
+                System.out.println(intersection.get(0) + " X " + intersection.get(1));
             }
         }
 
-        if(VALIDATE) {
+        if (VALIDATE) {
             MatlabValidation.generateMatlabIntersectionValidationScript(intersections, "validate_simple_algorithm", 2, true);
         }
 

@@ -1,6 +1,6 @@
 package edu.fh.cs.compgeometry.stramm.abgabe3;
 
-import edu.fh.cs.compgeometry.stramm.linesweep.*;
+import edu.fh.cs.compgeometry.stramm.linesweep.LinearSweepLine;
 import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
@@ -15,21 +15,24 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by Basti on 21.05.2015.
+ * Main class Abgabe 3 using line sweep algorithm.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class Main {
 
+    // Toggle debugging -> printing to screen
     public static final boolean DEBUG = false;
+    // Toggle validation -> generate Matlab Validation Script
     private static final boolean VALIDATE = true;
 
     public static void main(String[] args) {
         final String pathToData = "." + File.separator + "data" + File.separator;
         final List<String> fileNames = new ArrayList<>();
-        fileNames.add("s_1000_1.dat");
-        //fileNames.add("s_1000_10.dat");
+        //fileNames.add("s_1000_1.dat");
+        fileNames.add("s_1000_10.dat");
         //fileNames.add("s_10000_1.dat");
         //fileNames.add("s_100000_1.dat");
-        //fileNames.add("test2.dat");
 
         for (String fileName : fileNames) {
             crossLinesFromFile(new File(pathToData + fileName));
@@ -61,6 +64,7 @@ public class Main {
         System.out.println("Time taken: " + timeTaken);
 
         if (DEBUG) {
+            // print the found intersections
             StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append("Following intersections were found:");
             stringBuffer.append(System.lineSeparator());
@@ -71,23 +75,27 @@ public class Main {
             System.out.println(stringBuffer.toString());
         }
 
-        if(VALIDATE) {
+        if (VALIDATE) {
+            // generate matlab script to validate intersections
             MatlabValidation.generateMatlabIntersectionPointValidationScript(sweepLine.getIntersections(), "validate_sweep_line_", 2, true);
             System.out.println("Errors:");
             System.out.println();
+            // print similar x values
             System.out.println("Problematic x values:");
-            if(!sweepLine.getEventList().getErrors().isEmpty()) {
+            if (!sweepLine.getEventList().getErrors().isEmpty()) {
                 System.out.println(sweepLine.getEventList().getErrors());
             }
+            // print similar y values
             System.out.println("Problematic y values:");
-            if(!sweepLine.getNeighborhood().getErrors().isEmpty()) {
+            if (!sweepLine.getNeighborhood().getErrors().isEmpty()) {
                 System.out.println(sweepLine.getNeighborhood().getErrors());
             }
             System.out.println();
+            // print duplicates
             System.out.println("Duplicated intersections:");
-            while(!sweepLine.getIntersections().isEmpty()) {
+            while (!sweepLine.getIntersections().isEmpty()) {
                 Intersection intersection = sweepLine.getIntersections().remove(0);
-                if(sweepLine.getIntersections().contains(intersection) || sweepLine.getIntersections().contains(new Intersection(intersection.getIntersectionPoint(), intersection.getLines().get(1), intersection.getLines().get(0)))) {
+                if (sweepLine.getIntersections().contains(intersection) || sweepLine.getIntersections().contains(new Intersection(intersection.getIntersectionPoint(), intersection.getLines().get(1), intersection.getLines().get(0)))) {
                     System.out.println("Duplicate intersection: " + intersection);
                 }
             }

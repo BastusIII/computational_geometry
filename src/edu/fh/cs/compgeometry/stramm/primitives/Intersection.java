@@ -3,7 +3,6 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 import com.sun.javafx.geom.Vec2d;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**

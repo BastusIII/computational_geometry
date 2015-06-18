@@ -7,12 +7,17 @@ import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.SweepLine;
 import edu.fh.cs.compgeometry.stramm.primitives.Intersection;
 
 /**
- * Created by Basti on 21.05.2015.
+ * The intersection point event.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class IntersectionEvent extends BaseEvent {
 
+    // corresponding lower neighbor
     Neighbor lowerNeighbor;
+    // corresponding upper neighbor
     Neighbor upperNeighbor;
+    // The intersection point
     private Vec2d intersection;
 
     public IntersectionEvent(SweepLine sweepLine, Vec2d intersection, Neighbor lower, Neighbor upper) {

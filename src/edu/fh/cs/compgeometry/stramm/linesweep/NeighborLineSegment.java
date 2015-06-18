@@ -1,13 +1,16 @@
 package edu.fh.cs.compgeometry.stramm.linesweep;
 
 import com.sun.javafx.geom.Vec2d;
+import edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Neighbor;
 import edu.fh.cs.compgeometry.stramm.primitives.LineSegment;
 import edu.fh.cs.compgeometry.stramm.primitives.SlopeInterceptLineSegment;
 
 /**
- * Created by Basti on 26.05.2015.
+ * Implementation of a neighbor line segment.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
-public class NeighborLineSegment extends SlopeInterceptLineSegment implements edu.fh.cs.compgeometry.stramm.linesweep.interfaces.Neighbor {
+public class NeighborLineSegment extends SlopeInterceptLineSegment implements Neighbor {
 
     private double yVal = Double.NaN;
     private double lastUpdateXVal = Double.NaN;

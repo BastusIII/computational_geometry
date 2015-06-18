@@ -3,7 +3,9 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 import com.sun.javafx.geom.Vec2d;
 
 /**
- * Created by Basti on 28.05.2015.
+ * Extends the line segment by functions to get the lines slope intercept form.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class SlopeInterceptLineSegment extends SimpleLineSegment implements InterceptLineSegment {
 

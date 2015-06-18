@@ -17,14 +17,14 @@ public class Main {
         SVGParser parser = new SVGParser();
         parser.parseFile(new File(pathToData + "DeutschlandMitStaedten.svg"));
 
-        for(NamedPolygon polygon: parser.getPolygons()) {
+        for (NamedPolygon polygon : parser.getPolygons()) {
             double area = polygon.getArea();
             System.out.println("Found " + polygon.getName() + " with a size of: " + area
-            + " approximately " + String.format("%.0f", area * 70550.19 / 60026.125) + " km².");
+                    + " approximately " + String.format("%.0f", area * 70550.19 / 60026.125) + " km².");
         }
 
-        for(NamedPoint point: parser.getPoints()) {
-            for (NamedPolygon polygon: parser.getPolygons()) {
+        for (NamedPoint point : parser.getPoints()) {
+            for (NamedPolygon polygon : parser.getPolygons()) {
                 if (polygon.containsPoint(point)) {
                     System.out.println(point.getName() + " lays in: " + polygon.getName());
                 }

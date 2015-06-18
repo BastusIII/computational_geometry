@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Basti on 26.05.2015.
+ * A linear implementation of an event list.
+ *
+ * @author Created by Basti on 21.05.2015.
  */
 public class LinearEventList extends BaseErrorList implements EventList {
 
+    // List containing all events
     private List<Event> eventList = new ArrayList<>();
-
 
     @Override
     public int compare(Event o1, Event o2) {
@@ -27,7 +29,6 @@ public class LinearEventList extends BaseErrorList implements EventList {
             addEvent(event);
         }
     }
-
 
     @Override
     public void addEvent(Event event) {
