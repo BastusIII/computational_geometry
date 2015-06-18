@@ -3,7 +3,7 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 import com.sun.javafx.geom.Vec2d;
 
 /**
- * Created by femy on 4/16/15.
+ * A line segment between two points.
  */
 public interface LineSegment {
 

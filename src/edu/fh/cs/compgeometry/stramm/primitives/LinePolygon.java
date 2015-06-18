@@ -53,6 +53,11 @@ public class LinePolygon implements Polygon {
 
     @Override
     public boolean containsPoint(Vec2d point) {
+        /*
+            Diese Methode ist für alle Linien in einem Topf leider sehr umständlich.
+            Dafür ist die Flächenberechnung sehr kurz.
+         */
+
         // Works only for consecutive lines.
         Vec2d pointOutside = getPointOutside();
         LineSegment testLine = new SimpleLineSegment(pointOutside, point);

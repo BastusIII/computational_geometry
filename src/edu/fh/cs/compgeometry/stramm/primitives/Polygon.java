@@ -11,7 +11,7 @@ import java.util.List;
 public interface Polygon {
 
     /**
-     * Returnes all lines of the border of this polygon.
+     * Returns all lines of the border of this polygon.
      *
      * @return The border lines.
      */

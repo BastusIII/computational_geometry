@@ -8,7 +8,7 @@ import edu.fh.cs.compgeometry.stramm.util.SVGParser;
 import java.io.File;
 
 /**
- * Created by femy on 5/9/15.
+ * Main class for Aufgabe 2.
  */
 public class Main {
 

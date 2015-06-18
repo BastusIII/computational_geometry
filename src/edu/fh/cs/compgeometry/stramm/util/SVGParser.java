@@ -25,6 +25,11 @@ public class SVGParser {
 
     private Collection<NamedPoint> points = new HashSet<>();
 
+    /**
+     * Extracts all polygons and points from a given SVG-File.
+     * @param file The SVG-File.
+     * @throws ParserException File not found.
+     */
     public void parseFile(final File file) throws ParserException {
 
         try {
@@ -40,6 +45,11 @@ public class SVGParser {
 
     }
 
+    /**
+     * Converts a path element to polygon or point.
+     * @param path The path-element as String.
+     * @throws ParserException For non-valid paths.
+     */
     private void parsePath(String path) throws ParserException {
         Map<String, String> attributeMap = new HashMap<>();
         Matcher matcher = attributePattern.matcher(path);

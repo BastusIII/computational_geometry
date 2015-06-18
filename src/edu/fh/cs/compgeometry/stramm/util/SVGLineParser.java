@@ -36,6 +36,9 @@ public class SVGLineParser {
         initializeCommandMap();
     }
 
+    /**
+     * Creates the mapping from svg-codes to actions.
+     */
     private void initializeCommandMap() {
         commandMap.put(PathCMD.MOVETO_ABS.symbol, this::setMoveToAbs);
         commandMap.put(PathCMD.MOVETO_REL.symbol, this::setMoveToRel);

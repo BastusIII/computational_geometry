@@ -3,11 +3,11 @@ package edu.fh.cs.compgeometry.stramm.primitives;
 import com.sun.javafx.geom.Vec2d;
 
 /**
- * Created by femy on 4/16/15.
+ * Simple implementation for a line segment.
  */
 public class SimpleLineSegment implements LineSegment {
 
-    // according to wiki, double has 15–17 significant decimal digits precision.
+    // according to wiki, double has 15ï¿½17 significant decimal digits precision.
     public static final double THRESHOLD = 1e-14; //Math.pow(10.0, -12.0);
 
     private final Vec2d point1;
