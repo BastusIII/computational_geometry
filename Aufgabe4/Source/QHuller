@@ -1,0 +1,59 @@
+#! /bin/bash
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script measures the time taken by qhull for random points.
+It takes multiple test with different amounts of points and dimensions.
+
+OPTIONS:
+   -h      Show this message
+   -e      Maximum exponent of the number of points. 10^e
+   -d      Maximum dimensions of a point.
+   -t      Time out in seconds. Default 5 seconds.
+EOF
+}
+
+MAX_EXPONENT=
+MAX_DIMENSIONS=
+TIME_OUT=5
+while getopts “he:d:t:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         e)
+             MAX_EXPONENT=$OPTARG
+             ;;
+         d)
+             MAX_DIMENSIONS=$OPTARG
+             ;;
+         t)
+             TIME_OUT=$OPTARG
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $MAX_EXPONENT ]] || [[ -z $MAX_DIMENSIONS ]]
+then
+     usage
+     exit 1
+fi
+LOG_FILE="./times.log"
+echo "Times for convex hulls" > $LOG_FILE
+for d in `seq 2 ${MAX_DIMENSIONS}`;
+    do
+        for e in `seq 1 ${MAX_EXPONENT}`;
+		    do
+		    	RESULT=`./measureTime -e ${e} -d ${d} -t ${TIME_OUT}`
+		        echo $RESULT
+		        echo $RESULT >> $LOG_FILE
+		    done
+    done

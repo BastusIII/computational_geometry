@@ -1,0 +1,75 @@
+#! /bin/bash
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script measures the time taken by qhull for random points.
+
+OPTIONS:
+   -h      Show this message
+   -e      Exponent of the number of points. 10^e
+   -d      Dimensions of a point.
+   -t      Time outin seconds. Default 5 seconds.
+EOF
+}
+
+EXPONENT=
+DIMENSIONS=
+TIME_OUT=5
+while getopts “he:d:t:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         e)
+             EXPONENT=$OPTARG
+             ;;
+         d)
+             DIMENSIONS=$OPTARG
+             ;;
+         t)
+             TIME_OUT=$OPTARG
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $EXPONENT ]] || [[ -z $DIMENSIONS ]]
+then
+     usage
+     exit 1
+fi
+
+rbox_pipe=/tmp/rboxpipe
+qhull_pipe=/tmp/qhullpipe
+
+trap "rm -f $rbox_pipe; rm -f $qhull_pipe" EXIT
+
+if [[ ! -p $rbox_pipe ]]; then
+    mkfifo $rbox_pipe
+fi
+if [[ ! -p $qhull_pipe ]]; then
+    mkfifo $qhull_pipe
+fi
+
+rbox_pid=
+qhull_pid=
+grep_pid=
+
+grep "CPU seconds to compute hull (after input): " <$qhull_pipe&
+grep_pid=$!
+
+qhull <$rbox_pipe >$qhull_pipe&
+qhull_pid=$!
+
+rbox  "$((10**$EXPONENT))" "D$DIMENSIONS" >$rbox_pipe&
+rbox_pid=$!
+
+trap "kill -9 ${rbox_pid} ${qhull_pid} ${grep_pid} 2>/dev/null; wait ${rbox_pid} ${qhull_pid} ${grep_pid} 2>/dev/null; exit 130" SIGHUP SIGINT SIGTERM
+wait $grep_pid

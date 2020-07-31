@@ -1,0 +1,144 @@
+#! /bin/bash
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script converts a log file to a matlab script, that plots the measured times.
+
+OPTIONS:
+   -h      Show this message
+   -i      Name of the log file.
+   -o      Name of the script file.
+EOF
+}
+
+
+INPUT=
+OUTPUT=
+while getopts “hi:o:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         i)
+             INPUT=$OPTARG
+             ;;
+         o)
+             OUTPUT=$OPTARG
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $INPUT ]] || [[ -z $OUTPUT ]]
+then
+     usage
+     exit 1
+fi
+OUTPUT_IMG="${OUTPUT}.jpg"
+OUTPUT="${OUTPUT}.m"
+
+echo "%Plots the measured times." > "${OUTPUT}"
+readarray lines < "${INPUT}"
+#read values from lines to seperate arrays.
+declare -a EXPONENTS
+declare -a DIMENSIONS
+declare -a TIMES
+for line in `seq 1 $((${#lines[@]}-1))`;
+do
+    EXPONENTS[line]=`expr "${lines[${line}]}" : '.*\(N[0-9]*\)'`
+    EXPONENTS[line]="${EXPONENTS[${line}]#N}"
+
+    DIMENSIONS[line]=`expr "${lines[${line}]}" : '.*\(D[0-9]*\)'`
+    DIMENSIONS[line]="${DIMENSIONS[${line}]#D}"
+
+    TIMES[line]=`expr "${lines[${line}]}" : '.*\(T[0-9]*.[0-9]*\(e-\?[0-9]*\)\?\)'`
+    TIMES[line]="${TIMES[${line}]#T}"
+done
+
+#find maximum dimensions.
+NUM_EXPONENTS=0
+NUM_DIMENSIONS=1
+for exponent in `seq 1 ${#EXPONENTS[@]}`;
+do
+    if [[ "${EXPONENTS[${exponent}]}" -gt "$NUM_EXPONENTS" ]]
+    then
+        ((NUM_EXPONENTS++))
+    else
+        break
+    fi
+done
+
+for dimension in `seq 1 ${#DIMENSIONS[@]}`;
+do
+    if [[ "${DIMENSIONS[${dimension}]}" -eq "${DIMENSIONS[((${dimension}+1))]}" ]]
+    then
+        ((NUM_DIMENSIONS++))
+    else
+        break
+    fi
+done
+
+#Find maximum time.
+MAX_TIME=0
+for time in `seq 1 ${#TIMES[@]}`;
+do
+    time_value=`echo ${TIMES[${time}]} | sed -e 's/[eE]+*/\\*10\\^/'`
+    if [[ $time_value =~ [0-9]*\.[0-9]*(\*10\^-?[0-9]*)? ]]
+    then
+        compare_result=`echo "${time_value} > ${MAX_TIME}" | bc`
+        if [[ ${compare_result} -eq "1" ]]
+        then
+            MAX_TIME="${time_value}"
+        fi
+    fi
+done
+
+echo "max_time = ${MAX_TIME};" >> "${OUTPUT}"
+
+#initialize matlab arrays.
+echo -n "exponents=[${EXPONENTS[1]}" >> "${OUTPUT}"
+for exponent in `seq 2 ${#EXPONENTS[@]}`;
+do
+    echo -n ", ${EXPONENTS[${exponent}]}" >> "${OUTPUT}"
+done
+echo "];" >> "${OUTPUT}"
+
+echo -n "dimensions=[${DIMENSIONS[1]}" >> "${OUTPUT}"
+for dimension in `seq 2 ${#DIMENSIONS[@]}`;
+do
+    echo -n ", ${DIMENSIONS[${dimension}]}" >> "${OUTPUT}"
+done
+echo "];" >> "${OUTPUT}"
+
+echo -n "timez=[${TIMES[1]}" >> "${OUTPUT}"
+for time in `seq 2 ${#TIMES[@]}`;
+do
+    if [[ "${TIMES[${time}]}" =~ [0-9]*\+ ]]
+    then
+        echo -n ", max_time" >> "${OUTPUT}"
+    else
+        echo -n ", ${TIMES[${time}]}" >> "${OUTPUT}"
+    fi
+done
+echo "];" >> "${OUTPUT}"
+
+echo "%Reshaping vectors for display in graph." >> "${OUTPUT}"
+
+echo "exponents = reshape(exponents,${NUM_EXPONENTS},${NUM_DIMENSIONS})';" >> "${OUTPUT}"
+echo "dimensions = reshape(dimensions,${NUM_EXPONENTS},${NUM_DIMENSIONS})';" >> "${OUTPUT}"
+echo "timez = reshape(timez,${NUM_EXPONENTS},${NUM_DIMENSIONS})';" >> "${OUTPUT}"
+
+echo "%Create plot." >> "${OUTPUT}"
+echo "fig = figure('Name','Times for qhull','NumberTitle','off');" >> "${OUTPUT}"
+echo "mesh(exponents,dimensions,timez);" >> "${OUTPUT}"
+echo "xlabel('Number of points(10^x)')" >> "${OUTPUT}"
+echo "ylabel('Dimensions points')" >> "${OUTPUT}"
+echo "zlabel('Time taken in seconds')" >> "${OUTPUT}"
+echo "saveas(fig, '${OUTPUT_IMG}');" >> "${OUTPUT}"

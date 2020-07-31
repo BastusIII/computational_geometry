@@ -1,0 +1,66 @@
+#! /bin/bash
+usage()
+{
+cat << EOF
+usage: $0 options
+
+This script measures the time taken by qhull for random points.
+
+OPTIONS:
+   -h      Show this message
+   -e      Exponent of the number of points. 10^e
+   -d      Dimensions of a point.
+   -t      Time outin seconds. Default 5 seconds.
+EOF
+}
+
+
+EXPONENT=
+DIMENSIONS=
+TIME_OUT=5
+while getopts “he:d:t:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         e)
+             EXPONENT=$OPTARG
+             ;;
+         d)
+             DIMENSIONS=$OPTARG
+             ;;
+         t)
+             TIME_OUT=$OPTARG
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $EXPONENT ]] || [[ -z $DIMENSIONS ]]
+then
+     usage
+     exit 1
+fi
+
+./rndqhull "-d" "${DIMENSIONS}" "-e" "${EXPONENT}" "-t" "${TIME_OUT}" &
+pid=$!
+
+./waitAndKill "-p" "${pid}" "-t" "${TIME_OUT}"&
+sleep_pid=$!
+
+wait $pid > /dev/null
+
+status=$?
+if [ $status -gt 128 ]; then
+    echo "qhull: ${TIME_OUT}+"
+    exit
+else
+    kill -s SIGTERM $sleep_pid 2>/dev/null
+    wait $sleep_pid 2>/dev/null
+    exit
+fi

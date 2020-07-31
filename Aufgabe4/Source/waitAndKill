@@ -1,0 +1,48 @@
+#! /bin/bash
+usage()
+{
+cat << EOF
+usage: $0 options
+
+Wait and kill pid.
+OPTIONS:
+   -h    Show this message
+   -p  The pid to kill.
+   -t    Time outin seconds. Default 5 seconds.
+EOF
+}
+
+
+PID=
+TIME_OUT=
+while getopts “hp:t:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         p)
+             PID=$OPTARG
+             ;;
+         t)
+             TIME_OUT=$OPTARG
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [[ -z $PID ]] || [[ -z $TIME_OUT ]]
+then
+     usage
+     exit 1
+fi
+
+sleep $TIME_OUT&
+sleep_pid=$!
+trap "kill $sleep_pid;exit 0" SIGHUP SIGINT SIGTERM
+wait
+kill $PID
